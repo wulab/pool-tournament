@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pool Tournament</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <style>
+    body {
+      padding-top: 70px;
+      padding-bottom: 70px;
+    }
+    .navbar-fixed-bottom .navbar-nav {
+      margin: 0;
+      width: 100%;
+    }
+    .navbar-fixed-bottom .navbar-nav li {
+      float: left;
+      width: 50%;
+      text-align: center;
+    }
+    .navbar-fixed-bottom .navbar-nav li a {
+      padding-top: 15px;
+      padding-bottom: 15px;
+    }
+  </style>
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!-- Top navigation -->
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Pool Tournament</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="#">Group stage</a></li>
+          <li><a href="#">Second stage</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Middle content -->
+  <div class="container">
+
+    <!-- Match result form -->
+    <div class="row">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <form class="form-inline" role="form">
+            <div class="form-group">
+              <label class="sr-only">Group:</label>
+              <select class="form-control">
+                <option>Group</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Winner:</label>
+              <select class="form-control">
+                <option>Winner</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Balls for:</label>
+              <select class="form-control">
+                <option>Balls for</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Loser:</label>
+              <select class="form-control">
+                <option>Loser</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Balls against:</label>
+              <select class="form-control">
+                <option>Balls against</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-default">Add Result</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group A -->
+    <div class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading">Group A</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Date</th>
+              <th></th>
+              <th class="text-center">Results</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center">1</td>
+              <td>Feb 1</td>
+              <td class="text-right">Player 1</td>
+              <td class="text-center">0 : 5</td>
+              <td>Player 2</td>
+            </tr>
+            <tr>
+              <td class="text-center">2</td>
+              <td>Feb 2</td>
+              <td class="text-right">Player 2</td>
+              <td class="text-center">3 : 0</td>
+              <td>Player 3</td>
+            </tr>
+            <tr>
+              <td class="text-center">3</td>
+              <td>Feb 3</td>
+              <td class="text-right">Player 3</td>
+              <td class="text-center">—</td>
+              <td>Player 4</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom navigation -->
+  <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+    <div class="container">
+      <div class="row">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#">Matches</a></li>
+          <li><a href="#">Points</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</body>
+</html>
