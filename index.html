@@ -48,35 +48,87 @@
     <div class="row">
       <div class="panel panel-default">
         <div class="panel-body">
-          <form class="form-inline" role="form">
+          <form class="form-inline" role="form" ng-submit="addMatch()">
             <div class="form-group">
               <label class="sr-only">Group:</label>
-              <select class="form-control">
-                <option>Group</option>
+              <select class="form-control" required ng-model="match.group">
+                <option value="">Group</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Winner:</label>
-              <select class="form-control">
-                <option>Winner</option>
+              <select class="form-control" required ng-model="match.winner">
+                <option value="">Winner</option>
+                <option value="neng">neng</option>
+                <option value="ing">ing</option>
+                <option value="michael">michael</option>
+                <option value="phat">phat</option>
+                <option value="north">north</option>
+                <option value="nut">nut</option>
+                <option value="jo">jo</option>
+                <option value="sunny">sunny</option>
+                <option value="neung">neung</option>
+                <option value="lhung">lhung</option>
+                <option value="kelly">kelly</option>
+                <option value="art">art</option>
+                <option value="boat">boat</option>
+                <option value="fifth">fifth</option>
+                <option value="book">book</option>
+                <option value="ton">ton</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="sr-only">Balls for:</label>
-              <select class="form-control">
-                <option>Balls for</option>
+              <label class="sr-only">Winner balls:</label>
+              <select class="form-control" required ng-model="match.winnerBalls">
+                <option value="">Winner balls</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Loser:</label>
-              <select class="form-control">
-                <option>Loser</option>
+              <select class="form-control" required ng-model="match.loser">
+                <option value="">Loser</option>
+                <option value="neng">neng</option>
+                <option value="ing">ing</option>
+                <option value="michael">michael</option>
+                <option value="phat">phat</option>
+                <option value="north">north</option>
+                <option value="nut">nut</option>
+                <option value="jo">jo</option>
+                <option value="sunny">sunny</option>
+                <option value="neung">neung</option>
+                <option value="lhung">lhung</option>
+                <option value="kelly">kelly</option>
+                <option value="art">art</option>
+                <option value="boat">boat</option>
+                <option value="fifth">fifth</option>
+                <option value="book">book</option>
+                <option value="ton">ton</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="sr-only">Balls against:</label>
-              <select class="form-control">
-                <option>Balls against</option>
+              <label class="sr-only">Loser balls:</label>
+              <select class="form-control" required ng-model="match.loserBalls">
+                <option value="">Loser balls</option>
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
               </select>
             </div>
             <button type="submit" class="btn btn-default">Add Result</button>
@@ -150,8 +202,13 @@
       $locationProvider.html5Mode(true);
     });
 
-    app.controller('MatchesController', function($scope, matches) {
+    app.controller('MatchesController', function($scope, $route, matches) {
       $scope.matchesByGroup = _.groupBy(matches, 'group');
+      $scope.match = {date: 'Feb 1', foul: false}
+      $scope.addMatch = function() {
+        matches.push($scope.match);
+        $route.reload();
+      }
     });
   </script>
 </head>
