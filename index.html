@@ -93,6 +93,7 @@
                 <option value="5">5</option>
                 <option value="6">6</option>
                 <option value="7">7</option>
+                <option value="8">8</option>
               </select>
             </div>
             <div class="form-group">
@@ -129,6 +130,7 @@
                 <option value="5">5</option>
                 <option value="6">6</option>
                 <option value="7">7</option>
+                <option value="8">8</option>
               </select>
             </div>
             <button type="submit" class="btn btn-default">Add Result</button>
@@ -146,9 +148,9 @@
             <tr>
               <th class="text-center">#</th>
               <th>Date</th>
-              <th></th>
+              <th class="text-right">Winner</th>
               <th class="text-center">Results</th>
-              <th></th>
+              <th>Loser</th>
             </tr>
           </thead>
           <tbody>
@@ -164,34 +166,69 @@
       </div>
     </div>
   </script>
+  <script type="text/ng-template" id="points.html">
+    <!-- Group table -->
+    <div class="row" ng-repeat="(group, matches) in matchesByGroup">
+      <div class="panel panel-default">
+        <div class="panel-heading">Group {{ group }}</div>
+        <table class="table table-bordered table-responsive">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th class="text-center">Played</th>
+              <th class="text-center">Won</th>
+              <th class="text-center">Lost</th>
+              <th class="text-center">Pocketed</th>
+              <th class="text-center">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="player in findPlayers(matches)">
+              <td>{{ player }}</td>
+              <td class="text-center">{{ (matches | filter:player).length }}</td>
+              <td class="text-center">{{ (matches | filter:{winner:player}).length }}</td>
+              <td class="text-center">{{ (matches | filter:{loser:player}).length }}</td>
+              <td class="text-center">{{ countPocketed(matches, player) }}</td>
+              <td class="text-center">{{ (matches | filter:{winner:player}).length * 3 }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </script>
   <script>
     var app = angular.module('PoolTournament', ['ngRoute']);
 
     app.value('matches', [
-      {group: 'A', date: 'Feb 1', winner: 'neng', winnerBalls: 0, loser: 'ing', loserBalls: 2, foul: false},
-      {group: 'A', date: 'Feb 1', winner: 'neng', winnerBalls: 0, loser: 'michael', loserBalls: 0, foul: false},
-      {group: 'A', date: 'Feb 1', winner: 'ing', winnerBalls: 0, loser: 'phat', loserBalls: 3, foul: true},
+      {group: 'A', date: 'Feb 1', winner: 'neng', winnerBalls: 8, loser: 'ing', loserBalls: 5, foul: false},
+      {group: 'A', date: 'Feb 1', winner: 'neng', winnerBalls: 8, loser: 'michael', loserBalls: 7, foul: false},
+      {group: 'A', date: 'Feb 1', winner: 'ing', winnerBalls: 8, loser: 'phat', loserBalls: 4, foul: true},
 
-      {group: 'B', date: 'Feb 1', winner: 'north', winnerBalls: 0, loser: 'nut', loserBalls: 0, foul: false},
-      {group: 'B', date: 'Feb 1', winner: 'jo', winnerBalls: 0, loser: 'nut', loserBalls: 0, foul: false},
-      {group: 'B', date: 'Feb 1', winner: 'sunny', winnerBalls: 0, loser: 'nut', loserBalls: 0, foul: false},
-      {group: 'B', date: 'Feb 1', winner: 'north', winnerBalls: 0, loser: 'jo', loserBalls: 1, foul: false},
-      {group: 'B', date: 'Feb 1', winner: 'sunny', winnerBalls: 0, loser: 'north', loserBalls: 0, foul: false},
+      {group: 'B', date: 'Feb 1', winner: 'north', winnerBalls: 8, loser: 'nut', loserBalls: 7, foul: false},
+      {group: 'B', date: 'Feb 1', winner: 'jo', winnerBalls: 8, loser: 'nut', loserBalls: 7, foul: false},
+      {group: 'B', date: 'Feb 1', winner: 'sunny', winnerBalls: 8, loser: 'nut', loserBalls: 7, foul: false},
+      {group: 'B', date: 'Feb 1', winner: 'north', winnerBalls: 8, loser: 'jo', loserBalls: 6, foul: false},
+      {group: 'B', date: 'Feb 1', winner: 'sunny', winnerBalls: 8, loser: 'north', loserBalls: 7, foul: false},
 
-      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 1, loser: 'lhung', loserBalls: 0, foul: false},
-      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 5, loser: 'art', loserBalls: 0, foul: false},
-      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 0, loser: 'kelly', loserBalls: 0, foul: true},
-      {group: 'C', date: 'Feb 1', winner: 'art', winnerBalls: 2, loser: 'lhung', loserBalls: 0, foul: false},
+      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 8, loser: 'lhung', loserBalls: 6, foul: false},
+      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 8, loser: 'art', loserBalls: 2, foul: false},
+      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 8, loser: 'kelly', loserBalls: 7, foul: true},
+      {group: 'C', date: 'Feb 1', winner: 'art', winnerBalls: 8, loser: 'lhung', loserBalls: 5, foul: false},
 
-      {group: 'D', date: 'Feb 1', winner: 'boat', winnerBalls: 1, loser: 'fifth', loserBalls: 0, foul: false},
-      {group: 'D', date: 'Feb 1', winner: 'fifth', winnerBalls: 0, loser: 'book', loserBalls: 0, foul: true},
-      {group: 'D', date: 'Feb 1', winner: 'boat', winnerBalls: 1, loser: 'book', loserBalls: 0, foul: true},
+      {group: 'D', date: 'Feb 1', winner: 'boat', winnerBalls: 8, loser: 'fifth', loserBalls: 6, foul: false},
+      {group: 'D', date: 'Feb 1', winner: 'fifth', winnerBalls: 8, loser: 'book', loserBalls: 7, foul: true},
+      {group: 'D', date: 'Feb 1', winner: 'boat', winnerBalls: 8, loser: 'book', loserBalls: 6, foul: true},
     ]);
 
     app.config(function($routeProvider, $locationProvider) {
       $routeProvider.when('/', {
         controller: 'MatchesController',
         templateUrl: 'matches.html'
+      });
+
+      $routeProvider.when('/points', {
+        controller: 'PointsController',
+        templateUrl: 'points.html'
       });
 
       $routeProvider.otherwise({
@@ -202,6 +239,12 @@
       $locationProvider.html5Mode(true);
     });
 
+    app.controller('AppController', function($scope, $location) {
+      $scope.isActive = function(route) {
+        return route === $location.path();
+      }
+    });
+
     app.controller('MatchesController', function($scope, $route, matches) {
       $scope.matchesByGroup = _.groupBy(matches, 'group');
       $scope.match = {date: 'Feb 1', foul: false}
@@ -210,9 +253,29 @@
         $route.reload();
       }
     });
+
+    app.controller('PointsController', function($scope, matches) {
+      $scope.matchesByGroup = _.groupBy(matches, 'group');
+      $scope.findPlayers = function(matches) {
+        return _.uniq(_.flatten(_.map(matches, function(match){
+          return [match.winner, match.loser];
+        })));
+      }
+      $scope.countPocketed = function(matches, player) {
+        return _.reduce(matches, function(counts, match){
+          if (match.winner === player) {
+            return counts + match.winnerBalls;
+          } else if (match.loser === player) {
+            return counts + match.loserBalls;
+          } else {
+            return counts;
+          }
+        }, 0);
+      }
+    });
   </script>
 </head>
-<body>
+<body ng-controller="AppController">
   <!-- Top navigation -->
   <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
@@ -244,8 +307,8 @@
     <div class="container">
       <div class="row">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Matches</a></li>
-          <li><a href="#">Points</a></li>
+          <li ng-class="{active: isActive('/')}"><a href="/">Matches</a></li>
+          <li ng-class="{active: isActive('/points')}"><a href="/points">Points</a></li>
         </ul>
       </div>
     </div>
