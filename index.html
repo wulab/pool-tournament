@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="PoolTournament">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -40,32 +40,10 @@
 
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-</head>
-<body>
-  <!-- Top navigation -->
-  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Pool Tournament</a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav navbar-right">
-          <li class="active"><a href="#">Group stage</a></li>
-          <li><a href="#">Second stage</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Middle content -->
-  <div class="container">
-
+  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.min.js"></script>
+  <script type="text/ng-template" id="matches.html">
     <!-- Match result form -->
     <div class="row">
       <div class="panel panel-default">
@@ -107,10 +85,10 @@
       </div>
     </div>
 
-    <!-- Group A -->
-    <div class="row">
+    <!-- Match results for each group -->
+    <div class="row" ng-repeat="(group, matches) in matchesByGroup">
       <div class="panel panel-default">
-        <div class="panel-heading">Group A</div>
+        <div class="panel-heading">Group {{ group }}</div>
         <table class="table">
           <thead>
             <tr>
@@ -122,31 +100,86 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="text-center">1</td>
-              <td>Feb 1</td>
-              <td class="text-right">Player 1</td>
-              <td class="text-center">0 : 5</td>
-              <td>Player 2</td>
-            </tr>
-            <tr>
-              <td class="text-center">2</td>
-              <td>Feb 2</td>
-              <td class="text-right">Player 2</td>
-              <td class="text-center">3 : 0</td>
-              <td>Player 3</td>
-            </tr>
-            <tr>
-              <td class="text-center">3</td>
-              <td>Feb 3</td>
-              <td class="text-right">Player 3</td>
-              <td class="text-center">—</td>
-              <td>Player 4</td>
+            <tr ng-repeat="match in matches">
+              <td class="text-center">{{ $index + 1 }}</td>
+              <td>{{ match.date }}</td>
+              <td class="text-right">{{ match.winner }}</td>
+              <td class="text-center">{{ match.winnerBalls }} : {{ match.loserBalls }}</td>
+              <td>{{ match.loser }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+  </script>
+  <script>
+    var app = angular.module('PoolTournament', ['ngRoute']);
+
+    app.value('matches', [
+      {group: 'A', date: 'Feb 1', winner: 'neng', winnerBalls: 0, loser: 'ing', loserBalls: 2, foul: false},
+      {group: 'A', date: 'Feb 1', winner: 'neng', winnerBalls: 0, loser: 'michael', loserBalls: 0, foul: false},
+      {group: 'A', date: 'Feb 1', winner: 'ing', winnerBalls: 0, loser: 'phat', loserBalls: 3, foul: true},
+
+      {group: 'B', date: 'Feb 1', winner: 'north', winnerBalls: 0, loser: 'nut', loserBalls: 0, foul: false},
+      {group: 'B', date: 'Feb 1', winner: 'jo', winnerBalls: 0, loser: 'nut', loserBalls: 0, foul: false},
+      {group: 'B', date: 'Feb 1', winner: 'sunny', winnerBalls: 0, loser: 'nut', loserBalls: 0, foul: false},
+      {group: 'B', date: 'Feb 1', winner: 'north', winnerBalls: 0, loser: 'jo', loserBalls: 1, foul: false},
+      {group: 'B', date: 'Feb 1', winner: 'sunny', winnerBalls: 0, loser: 'north', loserBalls: 0, foul: false},
+
+      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 1, loser: 'lhung', loserBalls: 0, foul: false},
+      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 5, loser: 'art', loserBalls: 0, foul: false},
+      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 0, loser: 'kelly', loserBalls: 0, foul: true},
+      {group: 'C', date: 'Feb 1', winner: 'art', winnerBalls: 2, loser: 'lhung', loserBalls: 0, foul: false},
+
+      {group: 'D', date: 'Feb 1', winner: 'boat', winnerBalls: 1, loser: 'fifth', loserBalls: 0, foul: false},
+      {group: 'D', date: 'Feb 1', winner: 'fifth', winnerBalls: 0, loser: 'book', loserBalls: 0, foul: true},
+      {group: 'D', date: 'Feb 1', winner: 'boat', winnerBalls: 1, loser: 'book', loserBalls: 0, foul: true},
+    ]);
+
+    app.config(function($routeProvider, $locationProvider) {
+      $routeProvider.when('/', {
+        controller: 'MatchesController',
+        templateUrl: 'matches.html'
+      });
+
+      $routeProvider.otherwise({
+        redirectTo: '/'
+      });
+
+      // configure html5 to get links working on jsfiddle
+      $locationProvider.html5Mode(true);
+    });
+
+    app.controller('MatchesController', function($scope, matches) {
+      $scope.matchesByGroup = _.groupBy(matches, 'group');
+    });
+  </script>
+</head>
+<body>
+  <!-- Top navigation -->
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Pool Tournament</a>
+      </div>
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="#">Group stage</a></li>
+          <li><a href="#">Knockout stage</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Middle content -->
+  <div class="container">
+    <ng-view></ng-view>
   </div>
 
   <!-- Bottom navigation -->
