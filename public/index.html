@@ -43,6 +43,7 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-resource.min.js"></script>
   <script type="text/ng-template" id="matches.html">
     <!-- Match result form -->
     <div class="row">
@@ -146,7 +147,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th class="text-center">#</th>
+              <th class="text-center">Match</th>
               <th>Date</th>
               <th class="text-right">Winner</th>
               <th class="text-center">Results</th>
@@ -156,7 +157,7 @@
           <tbody>
             <tr ng-repeat="match in matches">
               <td class="text-center">{{ $index + 1 }}</td>
-              <td>{{ match.date }}</td>
+              <td>{{ match.date | date:'MMM d' }}</td>
               <td class="text-right">{{ match.winner }}</td>
               <td class="text-center">{{ match.winnerBalls }} : {{ match.loserBalls }}</td>
               <td>{{ match.loser }}</td>
@@ -197,28 +198,7 @@
     </div>
   </script>
   <script>
-    var app = angular.module('PoolTournament', ['ngRoute']);
-
-    app.value('matches', [
-      {group: 'A', date: 'Feb 1', winner: 'neng', winnerBalls: 8, loser: 'ing', loserBalls: 5, foul: false},
-      {group: 'A', date: 'Feb 1', winner: 'neng', winnerBalls: 8, loser: 'michael', loserBalls: 7, foul: false},
-      {group: 'A', date: 'Feb 1', winner: 'ing', winnerBalls: 8, loser: 'phat', loserBalls: 4, foul: true},
-
-      {group: 'B', date: 'Feb 1', winner: 'north', winnerBalls: 8, loser: 'nut', loserBalls: 7, foul: false},
-      {group: 'B', date: 'Feb 1', winner: 'jo', winnerBalls: 8, loser: 'nut', loserBalls: 7, foul: false},
-      {group: 'B', date: 'Feb 1', winner: 'sunny', winnerBalls: 8, loser: 'nut', loserBalls: 7, foul: false},
-      {group: 'B', date: 'Feb 1', winner: 'north', winnerBalls: 8, loser: 'jo', loserBalls: 6, foul: false},
-      {group: 'B', date: 'Feb 1', winner: 'sunny', winnerBalls: 8, loser: 'north', loserBalls: 7, foul: false},
-
-      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 8, loser: 'lhung', loserBalls: 6, foul: false},
-      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 8, loser: 'art', loserBalls: 2, foul: false},
-      {group: 'C', date: 'Feb 1', winner: 'neung', winnerBalls: 8, loser: 'kelly', loserBalls: 7, foul: true},
-      {group: 'C', date: 'Feb 1', winner: 'art', winnerBalls: 8, loser: 'lhung', loserBalls: 5, foul: false},
-
-      {group: 'D', date: 'Feb 1', winner: 'boat', winnerBalls: 8, loser: 'fifth', loserBalls: 6, foul: false},
-      {group: 'D', date: 'Feb 1', winner: 'fifth', winnerBalls: 8, loser: 'book', loserBalls: 7, foul: true},
-      {group: 'D', date: 'Feb 1', winner: 'boat', winnerBalls: 8, loser: 'book', loserBalls: 6, foul: true},
-    ]);
+    var app = angular.module('PoolTournament', ['ngRoute', 'ngResource']);
 
     app.config(function($routeProvider, $locationProvider) {
       $routeProvider.when('/', {
@@ -239,23 +219,32 @@
       $locationProvider.html5Mode(true);
     });
 
+    app.factory('Match', function($resource) {
+      return $resource('/matches/:id', {format: 'json'}, {update: {method: 'PUT'}});
+    });
+
     app.controller('AppController', function($scope, $location) {
       $scope.isActive = function(route) {
         return route === $location.path();
       }
     });
 
-    app.controller('MatchesController', function($scope, $route, matches) {
-      $scope.matchesByGroup = _.groupBy(matches, 'group');
-      $scope.match = {date: 'Feb 1', foul: false}
+    app.controller('MatchesController', function($scope, $route, Match) {
+      Match.query(function(matches) {
+        $scope.matchesByGroup = _.groupBy(matches, 'group');
+        $scope.match = new Match();
+      });
       $scope.addMatch = function() {
-        matches.push($scope.match);
+        $scope.match.date = new Date();
+        $scope.match.$save();
         $route.reload();
       }
     });
 
-    app.controller('PointsController', function($scope, matches) {
-      $scope.matchesByGroup = _.groupBy(matches, 'group');
+    app.controller('PointsController', function($scope, Match) {
+      Match.query(function(matches) {
+        $scope.matchesByGroup = _.groupBy(matches, 'group');
+      });
       $scope.findPlayers = function(matches) {
         return _.uniq(_.flatten(_.map(matches, function(match){
           return [match.winner, match.loser];

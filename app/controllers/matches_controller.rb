@@ -69,6 +69,7 @@ class MatchesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def match_params
-      params.require(:match).permit(:group, :winner, :loser, :date, :winner_balls, :loser_balls, :foul)
+      params.permit(:group, :winner, :loser, :date, :winnerBalls, :loserBalls, :foul)
+            .transform_keys! { |key| key.to_s.underscore }
     end
 end
