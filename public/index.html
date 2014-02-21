@@ -143,28 +143,30 @@
     <div class="row" ng-repeat="group in groups">
       <div class="panel panel-default">
         <div class="panel-heading">Group {{ group }}</div>
-        <table class="table table-bordered table-responsive">
-          <thead>
-            <tr>
-              <th>Player</th>
-              <th class="text-center">Played</th>
-              <th class="text-center">Won</th>
-              <th class="text-center">Lost</th>
-              <th class="text-center">Pocketed</th>
-              <th class="text-center">Points</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="player in rankPlayers(matchesByGroup(matches, group))">
-              <td>{{ player }}</td>
-              <td class="text-center">{{ (matches | filter:player).length }}</td>
-              <td class="text-center">{{ (matches | filter:{winner:player}).length }}</td>
-              <td class="text-center">{{ (matches | filter:{loser:player}).length }}</td>
-              <td class="text-center">{{ countPocketed(matches, player) }}</td>
-              <td class="text-center">{{ (matches | filter:{winner:player}).length * 3 }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th class="text-center">Played</th>
+                <th class="text-center">Won</th>
+                <th class="text-center">Lost</th>
+                <th class="text-center">Pocketed</th>
+                <th class="text-center">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="player in rankPlayers(matchesByGroup(matches, group))">
+                <td>{{ player }}</td>
+                <td class="text-center">{{ (matches | filter:player).length }}</td>
+                <td class="text-center">{{ (matches | filter:{winner:player}).length }}</td>
+                <td class="text-center">{{ (matches | filter:{loser:player}).length }}</td>
+                <td class="text-center">{{ countPocketed(matches, player) }}</td>
+                <td class="text-center">{{ (matches | filter:{winner:player}).length * 3 }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </script>
