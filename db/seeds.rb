@@ -6,22 +6,22 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 Match.create([
-  {group: 'A', date: 'Feb 1', winner: 'neng', winner_balls: 8, loser: 'ing', loser_balls: 5, foul: false},
-  {group: 'A', date: 'Feb 1', winner: 'neng', winner_balls: 8, loser: 'michael', loser_balls: 7, foul: false},
-  {group: 'A', date: 'Feb 1', winner: 'ing', winner_balls: 8, loser: 'phat', loser_balls: 4, foul: true},
+  {group: 'A', date: 'Feb 1', winner: 'Neng', winner_balls: 8, loser: 'Ing', loser_balls: 5, foul: false},
+  {group: 'A', date: 'Feb 1', winner: 'Neng', winner_balls: 8, loser: 'Michael', loser_balls: 7, foul: false},
+  {group: 'A', date: 'Feb 1', winner: 'Ing', winner_balls: 8, loser: 'Phat', loser_balls: 4, foul: true},
 
-  {group: 'B', date: 'Feb 1', winner: 'north', winner_balls: 8, loser: 'nut', loser_balls: 7, foul: false},
-  {group: 'B', date: 'Feb 1', winner: 'jo', winner_balls: 8, loser: 'nut', loser_balls: 7, foul: false},
-  {group: 'B', date: 'Feb 1', winner: 'sunny', winner_balls: 8, loser: 'nut', loser_balls: 7, foul: false},
-  {group: 'B', date: 'Feb 1', winner: 'north', winner_balls: 8, loser: 'jo', loser_balls: 6, foul: false},
-  {group: 'B', date: 'Feb 1', winner: 'sunny', winner_balls: 8, loser: 'north', loser_balls: 7, foul: false},
+  {group: 'B', date: 'Feb 1', winner: 'North', winner_balls: 8, loser: 'Nut', loser_balls: 7, foul: false},
+  {group: 'B', date: 'Feb 1', winner: 'Jo', winner_balls: 8, loser: 'Nut', loser_balls: 7, foul: false},
+  {group: 'B', date: 'Feb 1', winner: 'Sunny', winner_balls: 8, loser: 'Nut', loser_balls: 7, foul: false},
+  {group: 'B', date: 'Feb 1', winner: 'North', winner_balls: 8, loser: 'Jo', loser_balls: 6, foul: false},
+  {group: 'B', date: 'Feb 1', winner: 'Sunny', winner_balls: 8, loser: 'North', loser_balls: 7, foul: false},
 
-  {group: 'C', date: 'Feb 1', winner: 'neung', winner_balls: 8, loser: 'lhung', loser_balls: 6, foul: false},
-  {group: 'C', date: 'Feb 1', winner: 'neung', winner_balls: 8, loser: 'art', loser_balls: 2, foul: false},
-  {group: 'C', date: 'Feb 1', winner: 'neung', winner_balls: 8, loser: 'kelly', loser_balls: 7, foul: true},
-  {group: 'C', date: 'Feb 1', winner: 'art', winner_balls: 8, loser: 'lhung', loser_balls: 5, foul: false},
+  {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Lhung', loser_balls: 6, foul: false},
+  {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Art', loser_balls: 2, foul: false},
+  {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Kelly', loser_balls: 7, foul: true},
+  {group: 'C', date: 'Feb 1', winner: 'Art', winner_balls: 8, loser: 'Lhung', loser_balls: 5, foul: false},
 
-  {group: 'D', date: 'Feb 1', winner: 'boat', winner_balls: 8, loser: 'fifth', loser_balls: 6, foul: false},
-  {group: 'D', date: 'Feb 1', winner: 'fifth', winner_balls: 8, loser: 'book', loser_balls: 7, foul: true},
-  {group: 'D', date: 'Feb 1', winner: 'boat', winner_balls: 8, loser: 'book', loser_balls: 6, foul: true},
+  {group: 'D', date: 'Feb 1', winner: 'Boat', winner_balls: 8, loser: 'Fifth', loser_balls: 6, foul: false},
+  {group: 'D', date: 'Feb 1', winner: 'Fifth', winner_balls: 8, loser: 'Book', loser_balls: 7, foul: true},
+  {group: 'D', date: 'Feb 1', winner: 'Boat', winner_balls: 8, loser: 'Book', loser_balls: 6, foul: true},
 ])
