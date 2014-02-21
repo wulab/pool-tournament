@@ -156,7 +156,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="match in matches">
+            <tr ng-repeat="match in matches | orderBy:match.date">
               <td class="text-center">{{ $index + 1 }}</td>
               <td>{{ match.date | date:'MMM d' }}</td>
               <td class="text-right">{{ match.winner }}</td>
@@ -185,7 +185,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="player in findPlayers(matches)">
+            <tr ng-repeat="player in rankPlayers(matches)">
               <td>{{ player }}</td>
               <td class="text-center">{{ (matches | filter:player).length }}</td>
               <td class="text-center">{{ (matches | filter:{winner:player}).length }}</td>
@@ -250,6 +250,15 @@
         return _.uniq(_.flatten(_.map(matches, function(match){
           return [match.winner, match.loser];
         })));
+      }
+      $scope.rankPlayers = function(matches) {
+        var players = $scope.findPlayers(matches);
+        var winCounts = _.countBy(matches, function(match) {
+          return match.winner;
+        });
+        return _.sortBy(players, function(player) {
+          return winCounts[player] || 0;
+        }).reverse();
       }
       $scope.countPocketed = function(matches, player) {
         return _.reduce(matches, function(counts, match){
