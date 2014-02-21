@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group: MyString
+  winner: MyString
+  loser: MyString
+  date: 2014-02-21 08:40:39
+  winner_balls: 1
+  loser_balls: 1
+  foul: false
+
+two:
+  group: MyString
+  winner: MyString
+  loser: MyString
+  date: 2014-02-21 08:40:39
+  winner_balls: 1
+  loser_balls: 1
+  foul: false

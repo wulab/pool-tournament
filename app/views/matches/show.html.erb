@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Group:</strong>
+  <%= @match.group %>
+</p>
+
+<p>
+  <strong>Winner:</strong>
+  <%= @match.winner %>
+</p>
+
+<p>
+  <strong>Loser:</strong>
+  <%= @match.loser %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @match.date %>
+</p>
+
+<p>
+  <strong>Winner balls:</strong>
+  <%= @match.winner_balls %>
+</p>
+
+<p>
+  <strong>Loser balls:</strong>
+  <%= @match.loser_balls %>
+</p>
+
+<p>
+  <strong>Foul:</strong>
+  <%= @match.foul %>
+</p>
+
+<%= link_to 'Edit', edit_match_path(@match) %> |
+<%= link_to 'Back', matches_path %>
