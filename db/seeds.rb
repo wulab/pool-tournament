@@ -16,10 +16,10 @@ Match.create([
   {group: 'B', date: 'Feb 1', winner: 'North', winner_balls: 8, loser: 'Jo', loser_balls: 6, foul: false},
   {group: 'B', date: 'Feb 1', winner: 'Sunny', winner_balls: 8, loser: 'North', loser_balls: 7, foul: false},
 
-  {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Lhung', loser_balls: 6, foul: false},
+  {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Hlung', loser_balls: 6, foul: false},
   {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Art', loser_balls: 2, foul: false},
   {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Kelly', loser_balls: 7, foul: true},
-  {group: 'C', date: 'Feb 1', winner: 'Art', winner_balls: 8, loser: 'Lhung', loser_balls: 5, foul: false},
+  {group: 'C', date: 'Feb 1', winner: 'Art', winner_balls: 8, loser: 'Hlung', loser_balls: 5, foul: false},
 
   {group: 'D', date: 'Feb 1', winner: 'Boat', winner_balls: 8, loser: 'Fifth', loser_balls: 6, foul: false},
   {group: 'D', date: 'Feb 1', winner: 'Fifth', winner_balls: 8, loser: 'Book', loser_balls: 7, foul: true},
