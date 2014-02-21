@@ -5,20 +5,23 @@ var dataset = [8,10,14,31,44];
     r = 150,                            //radius
     color = d3.scale.category20c();     //builtin range of colors
  
-    // data = [{"label":"WIN", "value":2}, 
-    //         {"label":"LOSE", "value":1}];
+    data = [{"label":"WIN", "value":2}, 
+            {"label":"LOSE", "value":1}];
 
-    data = [{"label":"Ing", "value":2},
-            {"label":"Neng", "value":2},
-            {"label":"Neung", "value":3},
-            {"label":"Fifth", "value":2},
-            {"label":"Boat", "value":1},
-            {"label":"Book", "value":2},
-            {"label":"Art", "value":2},
-            {"label":"North", "value":3},
-            {"label":"Jo", "value":2},
-            {"label":"Kelly", "value":1}, 
-            {"label":"Hlung", "value":2}];
+    // data = [{"label":"Ing", "value":2},
+    //         {"label":"Neng", "value":2},
+    //         {"label":"Neung", "value":3},
+    //         {"label":"Fifth", "value":2},
+    //         {"label":"Boat", "value":1},
+    //         {"label":"Book", "value":2},
+    //         {"label":"Art", "value":2},
+    //         {"label":"North", "value":3},
+    //         {"label":"Jo", "value":2},
+    //         {"label":"Kelly", "value":1},
+    //         {"label":"Nut", "value":2},
+    //         {"label":"Michel", "value":1}, 
+    //         {"label":"Phat", "value":1},  
+    //         {"label":"Hlung", "value":2}];
     
     var vis = d3.select("#pie-chart-game")
         .append("svg:svg")              //create the SVG element inside the <body>
