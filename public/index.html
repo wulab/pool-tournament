@@ -64,22 +64,7 @@
               <label class="sr-only">Winner:</label>
               <select class="form-control" required ng-model="match.winner">
                 <option value="">Winner</option>
-                <option value="art">art</option>
-                <option value="boat">boat</option>
-                <option value="book">book</option>
-                <option value="fifth">fifth</option>
-                <option value="ing">ing</option>
-                <option value="jo">jo</option>
-                <option value="kelly">kelly</option>
-                <option value="lhung">lhung</option>
-                <option value="michael">michael</option>
-                <option value="neng">neng</option>
-                <option value="neung">neung</option>
-                <option value="north">north</option>
-                <option value="nut">nut</option>
-                <option value="phat">phat</option>
-                <option value="sunny">sunny</option>
-                <option value="ton">ton</option>
+                <option value="{{ player }}" ng-repeat="player in players">{{ player }}</option>
               </select>
             </div>
             <div class="form-group">
@@ -100,22 +85,7 @@
               <label class="sr-only">Loser:</label>
               <select class="form-control" required ng-model="match.loser">
                 <option value="">Loser</option>
-                <option value="art">art</option>
-                <option value="boat">boat</option>
-                <option value="book">book</option>
-                <option value="fifth">fifth</option>
-                <option value="ing">ing</option>
-                <option value="jo">jo</option>
-                <option value="kelly">kelly</option>
-                <option value="lhung">lhung</option>
-                <option value="michael">michael</option>
-                <option value="neng">neng</option>
-                <option value="neung">neung</option>
-                <option value="north">north</option>
-                <option value="nut">nut</option>
-                <option value="phat">phat</option>
-                <option value="sunny">sunny</option>
-                <option value="ton">ton</option>
+                <option value="{{ player }}" ng-repeat="player in players">{{ player }}</option>
               </select>
             </div>
             <div class="form-group">
@@ -142,7 +112,7 @@
     </div>
 
     <!-- Match results for each group -->
-    <div class="row" ng-repeat="(group, matches) in matchesByGroup">
+    <div class="row" ng-repeat="group in groups">
       <div class="panel panel-default">
         <div class="panel-heading">Group {{ group }}</div>
         <table class="table">
@@ -156,7 +126,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="match in matches | orderBy:match.date">
+            <tr ng-repeat="match in matches | filter:{group:group} | orderBy:match.date">
               <td class="text-center">{{ $index + 1 }}</td>
               <td>{{ match.date | date:'MMM d' }}</td>
               <td class="text-right">{{ match.winner }}</td>
@@ -170,7 +140,7 @@
   </script>
   <script type="text/ng-template" id="points.html">
     <!-- Group table -->
-    <div class="row" ng-repeat="(group, matches) in matchesByGroup">
+    <div class="row" ng-repeat="group in groups">
       <div class="panel panel-default">
         <div class="panel-heading">Group {{ group }}</div>
         <table class="table table-bordered table-responsive">
@@ -185,7 +155,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="player in rankPlayers(matches)">
+            <tr ng-repeat="player in rankPlayers(matchesByGroup(matches, group))">
               <td>{{ player }}</td>
               <td class="text-center">{{ (matches | filter:player).length }}</td>
               <td class="text-center">{{ (matches | filter:{winner:player}).length }}</td>
@@ -200,6 +170,12 @@
   </script>
   <script>
     var app = angular.module('PoolTournament', ['ngRoute', 'ngResource']);
+
+    app.value('groups', ['A', 'B', 'C', 'D']);
+    app.value('players', [
+      "Art", "Boat", "Book", "Fifth", "Ing", "Jo", "Kelly", "Lhung", "Michael",
+      "Neng", "Neung", "North", "Nut", "Phat", "Sunny", "Ton"
+    ]);
 
     app.config(function($routeProvider, $locationProvider) {
       $routeProvider.when('/', {
@@ -230,11 +206,13 @@
       }
     });
 
-    app.controller('MatchesController', function($scope, $route, Match) {
+    app.controller('MatchesController', function($scope, $route, Match, groups, players) {
       Match.query(function(matches) {
-        $scope.matchesByGroup = _.groupBy(matches, 'group');
+        $scope.matches = matches;
         $scope.match = new Match({winnerBalls: 8, loserBalls: 0});
       });
+      $scope.groups = groups;
+      $scope.players = players;
       $scope.addMatch = function() {
         $scope.match.date = new Date();
         $scope.match.$save();
@@ -242,10 +220,16 @@
       }
     });
 
-    app.controller('PointsController', function($scope, Match) {
+    app.controller('PointsController', function($scope, Match, groups) {
       Match.query(function(matches) {
-        $scope.matchesByGroup = _.groupBy(matches, 'group');
+        $scope.matches = matches;
       });
+      $scope.groups = groups;
+      $scope.matchesByGroup = function(matches, group) {
+        return _.filter(matches, function(match) {
+          return match.group === group;
+        });
+      }
       $scope.findPlayers = function(matches) {
         return _.uniq(_.flatten(_.map(matches, function(match){
           return [match.winner, match.loser];
