@@ -170,6 +170,89 @@
       </div>
     </div>
   </script>
+  <script type="text/ng-template" id="knockout.html">
+    <div class="row">
+      <!-- Tournament bracket -->
+      <figure style="margin-bottom:20px">
+        <img alt="640x480" src="http://placehold.it/640x480/eeeeee/aaaaaa&text=Tournament+Bracket" class="img-responsive center-block" />
+      </figure>
+
+      <!-- Round of 8 -->
+      <div class="panel panel-default">
+        <div class="panel-heading">Round of 8</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Date</th>
+              <th class="text-right">Winner</th>
+              <th class="text-center">Results</th>
+              <th>Loser</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center"></td>
+              <td></td>
+              <td class="text-right"></td>
+              <td class="text-center"></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Semi-finals -->
+      <div class="panel panel-default">
+        <div class="panel-heading">Semi-finals</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Date</th>
+              <th class="text-right">Winner</th>
+              <th class="text-center">Results</th>
+              <th>Loser</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center"></td>
+              <td></td>
+              <td class="text-right"></td>
+              <td class="text-center"></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Final -->
+      <div class="panel panel-default">
+        <div class="panel-heading">Final</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="text-center">#</th>
+              <th>Date</th>
+              <th class="text-right">Winner</th>
+              <th class="text-center">Results</th>
+              <th>Loser</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center"></td>
+              <td></td>
+              <td class="text-right"></td>
+              <td class="text-center"></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </script>
   <script>
     var app = angular.module('PoolTournament', ['ngRoute', 'ngResource']);
 
@@ -190,6 +273,11 @@
         templateUrl: 'points.html'
       });
 
+      $routeProvider.when('/knockout', {
+        controller: 'KnockoutController',
+        templateUrl: 'knockout.html'
+      });
+
       $routeProvider.otherwise({
         redirectTo: '/'
       });
@@ -203,6 +291,7 @@
     });
 
     app.controller('AppController', function($scope, $location) {
+      $scope.$location = $location;
       $scope.isActive = function(route) {
         return route === $location.path();
       }
@@ -260,6 +349,10 @@
         }, 0);
       }
     });
+
+    app.controller('KnockoutController', function($scope) {
+      // TODO
+    });
   </script>
 </head>
 <body ng-controller="AppController">
@@ -277,8 +370,8 @@
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li class="active"><a href="#">Group stage</a></li>
-          <li><a href="#">Knockout stage</a></li>
+          <li ng-class="{active: isActive('/') || isActive('/points')}"><a href="/">Group stage</a></li>
+          <li ng-class="{active: isActive('/knockout')}"><a href="/knockout">Knockout stage</a></li>
         </ul>
       </div>
     </div>
@@ -290,7 +383,7 @@
   </div>
 
   <!-- Bottom navigation -->
-  <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+  <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation" ng-hide="$location.path() === '/knockout'">
     <div class="container">
       <div class="row">
         <ul class="nav navbar-nav">
