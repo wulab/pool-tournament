@@ -156,7 +156,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="player in rankPlayers(matchesByGroup(matches, group))">
+              <tr ng-repeat="player in rankPlayers(matchesByGroup(matches, group))" ng-class="{success: matchesByGroup(matches, group).length === 6 && $index < 2}">
                 <td>{{ player }}</td>
                 <td class="text-center">{{ (matches | filter:player).length }}</td>
                 <td class="text-center">{{ (matches | filter:{winner:player}).length }}</td>
@@ -243,7 +243,9 @@
           return match.winner;
         });
         return _.sortBy(players, function(player) {
-          return winCounts[player] || 0;
+          var wins = winCounts[player] || 0;
+          var pockets = $scope.countPocketed(matches, player);
+          return [wins, pockets];
         }).reverse();
       }
       $scope.countPocketed = function(matches, player) {
