@@ -8,7 +8,7 @@
 Match.create([
   {group: 'A', date: 'Feb 1', winner: 'Neng', winner_balls: 8, loser: 'Ing', loser_balls: 5, foul: false},
   {group: 'A', date: 'Feb 1', winner: 'Neng', winner_balls: 8, loser: 'Michael', loser_balls: 7, foul: false},
-  {group: 'A', date: 'Feb 1', winner: 'Ing', winner_balls: 8, loser: 'Phat', loser_balls: 4, foul: true},
+  {group: 'A', date: 'Feb 1', winner: 'Ing', winner_balls: 5, loser: 'Phat', loser_balls: 5, foul: true},
   {group: 'A', date: 'Feb 21', winner: 'Ing', winner_balls: 8, loser: 'Michael', loser_balls: 5, foul: false},
   {group: 'A', date: 'Mar 3', winner: 'Neng', winner_balls: 8, loser: 'Phat', loser_balls: 3, foul: false},
 
@@ -21,12 +21,12 @@ Match.create([
 
   {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Hlung', loser_balls: 6, foul: false},
   {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Art', loser_balls: 2, foul: false},
-  {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 8, loser: 'Kelly', loser_balls: 7, foul: true},
+  {group: 'C', date: 'Feb 1', winner: 'Neung', winner_balls: 7, loser: 'Kelly', loser_balls: 8, foul: true},
   {group: 'C', date: 'Feb 1', winner: 'Art', winner_balls: 8, loser: 'Hlung', loser_balls: 5, foul: false},
   {group: 'C', date: 'Feb 21', winner: 'Kelly', winner_balls: 8, loser: 'Art', loser_balls: 7, foul: false},
   {group: 'C', date: 'Feb 21', winner: 'Hlung', winner_balls: 8, loser: 'Kelly', loser_balls: 5, foul: false},
 
   {group: 'D', date: 'Feb 1', winner: 'Boat', winner_balls: 8, loser: 'Fifth', loser_balls: 6, foul: false},
-  {group: 'D', date: 'Feb 1', winner: 'Fifth', winner_balls: 8, loser: 'Book', loser_balls: 7, foul: true},
-  {group: 'D', date: 'Feb 1', winner: 'Boat', winner_balls: 8, loser: 'Book', loser_balls: 6, foul: true},
+  {group: 'D', date: 'Feb 1', winner: 'Fifth', winner_balls: 7, loser: 'Book', loser_balls: 8, foul: true},
+  {group: 'D', date: 'Feb 1', winner: 'Boat', winner_balls: 8, loser: 'Book', loser_balls: 6, foul: false},
 ])

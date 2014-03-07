@@ -130,7 +130,7 @@
               <td class="text-center">{{ $index + 1 }}</td>
               <td>{{ match.date | date:'MMM d' }}</td>
               <td class="text-right">{{ match.winner }}</td>
-              <td class="text-center">{{ match.winnerBalls }} : {{ match.loserBalls }}</td>
+              <td class="text-center" ng-class="{'text-danger': match.foul}">{{ match.winnerBalls }} : {{ match.loserBalls }}</td>
               <td>{{ match.loser }}</td>
             </tr>
           </tbody>
