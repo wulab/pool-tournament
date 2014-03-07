@@ -1,0 +1,35 @@
+{
+  "name": "Overall Winner",
+  "winners": [
+    {
+      "name": "Winner A",
+      "winners": [
+        {"name": "Neng"},
+        {"name": "Ing"}
+      ]
+    },
+    {
+      "name": "Winner B",
+      "winners": [
+        {"name": "Sunny"},
+        {"name": "North"}
+      ]
+    }
+  ],
+  "winners2": [
+    {
+      "name": "Winner C",
+      "winners2": [
+        {"name": "Neung"},
+        {"name": "Kelly"}
+      ]
+    },
+    {
+      "name": "Winner D",
+      "winners2": [
+        {"name": "Boat"},
+        {"name": "Fifth"}
+      ]
+    }
+  ]
+}
