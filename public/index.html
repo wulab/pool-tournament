@@ -26,6 +26,23 @@
       padding-top: 15px;
       padding-bottom: 15px;
     }
+
+    .node circle {
+      cursor: pointer;
+      fill: #fff;
+      stroke: steelblue;
+      stroke-width: 1.5px;
+    }
+
+    .node text {
+      font: 10px sans-serif;
+    }
+
+    path.link {
+      fill: none;
+      stroke: #ccc;
+      stroke-width: 1.5px;
+    }
   </style>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -44,6 +61,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-resource.min.js"></script>
+  <script src="http://mbostock.github.com/d3/d3.v2.js"></script>
   <script type="text/ng-template" id="matches.html">
     <!-- Match result form -->
     <div class="row">
@@ -174,7 +192,7 @@
     <div class="row">
       <!-- Tournament bracket -->
       <figure style="margin-bottom:20px">
-        <img alt="640x480" src="http://placehold.it/640x480/eeeeee/aaaaaa&text=Tournament+Bracket" class="img-responsive center-block" />
+
       </figure>
 
       <!-- Round of 8 -->
@@ -252,6 +270,10 @@
         </table>
       </div>
     </div>
+    
+    <div id="chart"></div>
+    <script src="bracketd3.js"></script>
+
   </script>
   <script>
     var app = angular.module('PoolTournament', ['ngRoute', 'ngResource']);
