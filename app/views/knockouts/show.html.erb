@@ -1,0 +1,49 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Number:</strong>
+  <%= @knockout.number %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%= @knockout.date %>
+</p>
+
+<p>
+  <strong>Player:</strong>
+  <%= @knockout.player %>
+</p>
+
+<p>
+  <strong>Opponent:</strong>
+  <%= @knockout.opponent %>
+</p>
+
+<p>
+  <strong>Time:</strong>
+  <%= @knockout.time %>
+</p>
+
+<p>
+  <strong>Starter:</strong>
+  <%= @knockout.starter %>
+</p>
+
+<p>
+  <strong>Winner:</strong>
+  <%= @knockout.winner %>
+</p>
+
+<p>
+  <strong>Winner balls:</strong>
+  <%= @knockout.winner_balls %>
+</p>
+
+<p>
+  <strong>Loser balls:</strong>
+  <%= @knockout.loser_balls %>
+</p>
+
+<%= link_to 'Edit', edit_knockout_path(@knockout) %> |
+<%= link_to 'Back', knockouts_path %>

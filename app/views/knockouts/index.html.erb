@@ -1,0 +1,43 @@
+<h1>Listing knockouts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Number</th>
+      <th>Date</th>
+      <th>Player</th>
+      <th>Opponent</th>
+      <th>Time</th>
+      <th>Starter</th>
+      <th>Winner</th>
+      <th>Winner balls</th>
+      <th>Loser balls</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @knockouts.each do |knockout| %>
+      <tr>
+        <td><%= knockout.number %></td>
+        <td><%= knockout.date %></td>
+        <td><%= knockout.player %></td>
+        <td><%= knockout.opponent %></td>
+        <td><%= knockout.time %></td>
+        <td><%= knockout.starter %></td>
+        <td><%= knockout.winner %></td>
+        <td><%= knockout.winner_balls %></td>
+        <td><%= knockout.loser_balls %></td>
+        <td><%= link_to 'Show', knockout %></td>
+        <td><%= link_to 'Edit', edit_knockout_path(knockout) %></td>
+        <td><%= link_to 'Destroy', knockout, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Knockout', new_knockout_path %>

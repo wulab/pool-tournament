@@ -1,0 +1,53 @@
+<%= form_for(@knockout) do |f| %>
+  <% if @knockout.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@knockout.errors.count, "error") %> prohibited this knockout from being saved:</h2>
+
+      <ul>
+      <% @knockout.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :number %><br>
+    <%= f.text_field :number %>
+  </div>
+  <div class="field">
+    <%= f.label :date %><br>
+    <%= f.datetime_select :date %>
+  </div>
+  <div class="field">
+    <%= f.label :player %><br>
+    <%= f.text_field :player %>
+  </div>
+  <div class="field">
+    <%= f.label :opponent %><br>
+    <%= f.text_field :opponent %>
+  </div>
+  <div class="field">
+    <%= f.label :time %><br>
+    <%= f.number_field :time %>
+  </div>
+  <div class="field">
+    <%= f.label :starter %><br>
+    <%= f.text_field :starter %>
+  </div>
+  <div class="field">
+    <%= f.label :winner %><br>
+    <%= f.text_field :winner %>
+  </div>
+  <div class="field">
+    <%= f.label :winner_balls %><br>
+    <%= f.number_field :winner_balls %>
+  </div>
+  <div class="field">
+    <%= f.label :loser_balls %><br>
+    <%= f.number_field :loser_balls %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

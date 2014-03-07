@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  number: MyString
+  date: 2014-03-08 01:18:36
+  player: MyString
+  opponent: MyString
+  time: 1
+  starter: MyString
+  winner: MyString
+  winner_balls: 1
+  loser_balls: 1
+
+two:
+  number: MyString
+  date: 2014-03-08 01:18:36
+  player: MyString
+  opponent: MyString
+  time: 1
+  starter: MyString
+  winner: MyString
+  winner_balls: 1
+  loser_balls: 1

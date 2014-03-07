@@ -1,5 +1,6 @@
 PoolTournament::Application.routes.draw do
   resources :matches
+  resources :knockouts
   get '*path' => redirect('/')
 
   # The priority is based upon order of creation: first created -> highest priority.

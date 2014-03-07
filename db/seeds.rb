@@ -30,3 +30,15 @@ Match.create([
   {group: 'D', date: 'Feb 1', winner: 'Fifth', winner_balls: 7, loser: 'Book', loser_balls: 8, foul: true},
   {group: 'D', date: 'Feb 1', winner: 'Boat', winner_balls: 8, loser: 'Book', loser_balls: 6, foul: false},
 ])
+
+Knockout.create([
+  {number: '25', player: '1A', opponent: '2B', date: 'Mar 7'},
+  {number: '26', player: '1C', opponent: '2D', date: 'Mar 7'},
+  {number: '27', player: '2A', opponent: '1B', date: 'Mar 7'},
+  {number: '28', player: '2C', opponent: '1D', date: 'Mar 7'},
+
+  {number: '29', player: 'W25', opponent: 'W26', date: 'Mar 7'},
+  {number: '30', player: 'W27', opponent: 'W28', date: 'Mar 7'},
+
+  {number: '31', player: 'W29', opponent: 'W30', date: 'Mar 7'},
+])

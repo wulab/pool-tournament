@@ -11,10 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140221014039) do
+ActiveRecord::Schema.define(version: 20140307181836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "knockouts", force: true do |t|
+    t.string   "number"
+    t.datetime "date"
+    t.string   "player"
+    t.string   "opponent"
+    t.integer  "time"
+    t.string   "starter"
+    t.string   "winner"
+    t.integer  "winner_balls"
+    t.integer  "loser_balls"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "matches", force: true do |t|
     t.string   "group"
