@@ -214,6 +214,55 @@
       <figure style="margin-bottom:20px"></figure>
     </div>
 
+    <!-- Knockout result form -->
+    <div class="row">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <form class="form-inline" role="form" novalidate ng-submit="updateKnockout()">
+            <div class="form-group">
+              <label class="sr-only">Match #:</label>
+              <select class="form-control" required ng-model="knockout" ng-options="match.number for match in knockouts | orderBy:match.number">
+                <option value="">Match #</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Date:</label>
+              <input type="date" class="form-control" placeholder="Date" required ng-model="knockoutForm.date">
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Time:</label>
+              <input type="number" class="form-control" placeholder="Minutes" required ng-model="knockoutForm.time">
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Starter:</label>
+              <select class="form-control" required ng-model="knockoutForm.starter" ng-options="player for player in players">
+                <option value="">Starter</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Winner:</label>
+              <select class="form-control" required ng-model="knockoutForm.winner" ng-options="player for player in players">
+                <option value="">Winner</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Winner balls:</label>
+              <select class="form-control" required ng-model="knockoutForm.winnerBalls" ng-options="number for number in [8,7,6,5,4,3,2,1,0]">
+                <option value="">Winner balls</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="sr-only">Loser balls:</label>
+              <select class="form-control" required ng-model="knockoutForm.loserBalls" ng-options="number for number in [0,1,2,3,4,5,6,7,8]">
+                <option value="">Loser balls</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-default pull-right" ng-disabled="!knockoutForm">Update Result</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- Knockout results -->
     <div class="row" ng-repeat="round in rounds">
       <div class="panel panel-default">
@@ -290,11 +339,11 @@
     });
 
     app.factory('Match', function($resource) {
-      return $resource('/matches/:id', {format: 'json'}, {update: {method: 'PUT'}});
+      return $resource('/matches/:id', {format: 'json'}, {update: {method: 'PUT', params: {id: '@id'}}});
     });
 
     app.factory('Knockout', function($resource) {
-      return $resource('/knockouts/:id', {format: 'json'}, {update: {method: 'PUT'}});
+      return $resource('/knockouts/:id', {format: 'json'}, {update: {method: 'PUT', params: {id: '@id'}}});
     });
 
     app.controller('AppController', function($scope, $location) {
@@ -357,7 +406,7 @@
       }
     });
 
-    app.controller('KnockoutController', function($scope, Knockout) {
+    app.controller('KnockoutController', function($scope, Knockout, dateFilter) {
       Knockout.query(function(knockouts) {
         $scope.knockouts = _.sortBy(knockouts, 'number');
         $scope.rounds = [
@@ -368,6 +417,26 @@
       });
       $scope.isFoul = function(match) {
         return match.winnerBalls && match.winnerBalls !== 8;
+      }
+      $scope.$watch('knockout', function(knockout) {
+        if (knockout) {
+          $scope.knockoutForm = angular.copy(knockout);
+          $scope.knockoutForm.date = dateFilter($scope.knockoutForm.date, 'yyyy-MM-dd');
+          $scope.players = [$scope.knockoutForm.player, $scope.knockoutForm.opponent];
+        } else {
+          $scope.resetForm();
+        }
+      });
+      $scope.updateKnockout = function() {
+        $scope.knockoutForm.$update(function(knockout) {
+          angular.copy(knockout, $scope.knockout);  // avoid page reload
+          $scope.resetForm();
+        });
+      }
+      $scope.resetForm = function() {
+        delete $scope.knockout;
+        delete $scope.knockoutForm;
+        delete $scope.players;
       }
     });
   </script>
