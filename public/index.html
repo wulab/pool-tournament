@@ -9,6 +9,7 @@
   <!-- Bootstrap -->
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   <style>
+    /* Page layout */
     body {
       padding-top: 70px;
       padding-bottom: 70px;
@@ -27,17 +28,36 @@
       padding-bottom: 15px;
     }
 
+    /* Result tables */
+    .foul {
+      color: #a94442;
+    }
+    .winner {
+      font-weight: bold;
+    }
+    .starter {
+      color: #428bca;
+    }
+    .winner::after {
+
+    }
+    .starter::after {
+
+    }
+    .winner.starter::after {
+      
+    }
+
+    /* Tournament bracket */
     .node circle {
       cursor: pointer;
       fill: #fff;
       stroke: steelblue;
       stroke-width: 1.5px;
     }
-
     .node text {
       font: 10px sans-serif;
     }
-
     path.link {
       fill: none;
       stroke: #ccc;
@@ -148,7 +168,7 @@
               <td class="text-center">{{ $index + 1 }}</td>
               <td>{{ match.date | date:'MMM d' }}</td>
               <td class="text-right">{{ match.winner }}</td>
-              <td class="text-center" ng-class="{'text-danger': match.foul}">{{ match.winnerBalls }} : {{ match.loserBalls }}</td>
+              <td class="text-center" ng-class="{foul: match.foul}">{{ match.winnerBalls }} : {{ match.loserBalls }}</td>
               <td>{{ match.loser }}</td>
             </tr>
           </tbody>
@@ -189,82 +209,43 @@
     </div>
   </script>
   <script type="text/ng-template" id="knockout.html">
+    <!-- Tournament bracket -->
     <div class="row">
-      <!-- Tournament bracket -->
-      <figure style="margin-bottom:20px">
+      <figure style="margin-bottom:20px"></figure>
+    </div>
 
-      </figure>
-
-      <!-- Round of 8 -->
+    <!-- Knockout results -->
+    <div class="row" ng-repeat="round in rounds">
       <div class="panel panel-default">
-        <div class="panel-heading">Round of 8</div>
+        <div class="panel-heading">{{ round.title }}</div>
         <table class="table">
           <thead>
             <tr>
               <th class="text-center">#</th>
               <th>Date</th>
-              <th class="text-right">Winner</th>
+              <th class="text-center">Time</th>
+              <th class="text-right"></th>
               <th class="text-center">Results</th>
-              <th>Loser</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="text-center"></td>
-              <td></td>
-              <td class="text-right"></td>
-              <td class="text-center"></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Semi-finals -->
-      <div class="panel panel-default">
-        <div class="panel-heading">Semi-finals</div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th class="text-center">#</th>
-              <th>Date</th>
-              <th class="text-right">Winner</th>
-              <th class="text-center">Results</th>
-              <th>Loser</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-center"></td>
-              <td></td>
-              <td class="text-right"></td>
-              <td class="text-center"></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Final -->
-      <div class="panel panel-default">
-        <div class="panel-heading">Final</div>
-        <table class="table">
-          <thead>
-            <tr>
-              <th class="text-center">#</th>
-              <th>Date</th>
-              <th class="text-right">Winner</th>
-              <th class="text-center">Results</th>
-              <th>Loser</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="text-center"></td>
-              <td></td>
-              <td class="text-right"></td>
-              <td class="text-center"></td>
-              <td></td>
+            <tr ng-repeat="match in round.matches | orderBy:match.number">
+              <td class="text-center">{{ match.number }}</td>
+              <td>{{ match.date | date:'MMM d' }}</td>
+              <td class="text-center">
+                <span ng-if="!match.time">—</span>
+                <span ng-if="match.time">{{ match.time }} min</span>
+              </td>
+              <td class="text-right" ng-class="{winner: match.player === match.winner, starter: match.player === match.starter}">{{ match.player }}</td>
+              <td class="text-center" ng-class="{foul: isFoul(match)}">
+                <span ng-if="!match.winner">—</span>
+                <span ng-if="match.winner">
+                  {{ match.player === match.winner ? match.winnerBalls : match.loserBalls }} :
+                  {{ match.opponent === match.winner ? match.winnerBalls : match.loserBalls }}
+                </span>
+              </td>
+              <td ng-class="{winner: match.opponent === match.winner, starter: match.opponent === match.starter}">{{ match.opponent }}</td>
             </tr>
           </tbody>
         </table>
@@ -310,6 +291,10 @@
 
     app.factory('Match', function($resource) {
       return $resource('/matches/:id', {format: 'json'}, {update: {method: 'PUT'}});
+    });
+
+    app.factory('Knockout', function($resource) {
+      return $resource('/knockouts/:id', {format: 'json'}, {update: {method: 'PUT'}});
     });
 
     app.controller('AppController', function($scope, $location) {
@@ -372,8 +357,18 @@
       }
     });
 
-    app.controller('KnockoutController', function($scope) {
-      // TODO
+    app.controller('KnockoutController', function($scope, Knockout) {
+      Knockout.query(function(knockouts) {
+        $scope.knockouts = _.sortBy(knockouts, 'number');
+        $scope.rounds = [
+          {title: 'Round of 8', matches: $scope.knockouts.slice(0,4)},
+          {title: 'Semi-finals', matches: $scope.knockouts.slice(4,6)},
+          {title: 'Final', matches: $scope.knockouts.slice(-1)}
+        ];
+      });
+      $scope.isFoul = function(match) {
+        return match.winnerBalls && match.winnerBalls !== 8;
+      }
     });
   </script>
 </head>
