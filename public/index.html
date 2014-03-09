@@ -28,6 +28,13 @@
       padding-bottom: 15px;
     }
 
+    /* Forms */
+    @media (min-width: 768px) {
+      .form-inline .form-group input {
+        max-width: 110px;
+      }
+    }
+
     /* Result tables */
     .foul {
       color: #a94442;
@@ -45,7 +52,7 @@
 
     }
     .winner.starter::after {
-      
+
     }
 
     /* Tournament bracket */
@@ -90,60 +97,39 @@
           <form class="form-inline" role="form" ng-submit="addMatch()">
             <div class="form-group">
               <label class="sr-only">Group:</label>
-              <select class="form-control" required ng-model="match.group">
+              <select class="form-control" ng-model="matchForm.group" ng-options="group for group in groups">
                 <option value="">Group</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-                <option value="D">D</option>
               </select>
             </div>
             <div class="form-group">
+              <label class="sr-only">Date:</label>
+              <input type="text" class="form-control" placeholder="Date" ng-model="matchForm.date">
+            </div>
+            <div class="form-group">
               <label class="sr-only">Winner:</label>
-              <select class="form-control" required ng-model="match.winner">
+              <select class="form-control" ng-model="matchForm.winner" ng-options="player for player in players">
                 <option value="">Winner</option>
-                <option value="{{ player }}" ng-repeat="player in players">{{ player }}</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Winner balls:</label>
-              <select class="form-control" required ng-model="match.winnerBalls">
-                <option value="8">8</option>
-                <option value="7">7</option>
-                <option value="6">6</option>
-                <option value="5">5</option>
-                <option value="4">4</option>
-                <option value="3">3</option>
-                <option value="2">2</option>
-                <option value="1">1</option>
-                <option value="0">0</option>
+              <select class="form-control" ng-model="matchForm.winnerBalls" ng-options="number for number in [8,7,6,5,4,3,2,1,0]">
+                <option value="">W</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Loser:</label>
-              <select class="form-control" required ng-model="match.loser">
+              <select class="form-control" ng-model="matchForm.loser" ng-options="player for player in players">
                 <option value="">Loser</option>
-                <option value="{{ player }}" ng-repeat="player in players">{{ player }}</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Loser balls:</label>
-              <select class="form-control" required ng-model="match.loserBalls">
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
+              <select class="form-control" ng-model="matchForm.loserBalls" ng-options="number for number in [0,1,2,3,4,5,6,7,8]">
+                <option value="">L</option>
               </select>
             </div>
-            <div class="checkbox">
-              <label><input type="checkbox" ng-model="match.foul"> Foul</label>
-            </div>
-            <button type="submit" class="btn btn-default pull-right">Add Result</button>
+            <button type="submit" class="btn btn-default pull-right" ng-disabled="!matchForm">Add</button>
           </form>
         </div>
       </div>
@@ -168,7 +154,7 @@
               <td class="text-center">{{ $index + 1 }}</td>
               <td>{{ match.date | date:'MMM d' }}</td>
               <td class="text-right">{{ match.winner }}</td>
-              <td class="text-center" ng-class="{foul: match.foul}">{{ match.winnerBalls }} : {{ match.loserBalls }}</td>
+              <td class="text-center" ng-class="{foul: isFoul(match)}">{{ match.winnerBalls }} : {{ match.loserBalls }}</td>
               <td>{{ match.loser }}</td>
             </tr>
           </tbody>
@@ -221,43 +207,43 @@
           <form class="form-inline" role="form" novalidate ng-submit="updateKnockout()">
             <div class="form-group">
               <label class="sr-only">Match #:</label>
-              <select class="form-control" required ng-model="knockout" ng-options="match.number for match in knockouts | orderBy:match.number">
-                <option value="">Match #</option>
+              <select class="form-control" ng-model="knockout" ng-options="match.number for match in knockouts | orderBy:match.number">
+                <option value="">#</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Date:</label>
-              <input type="date" class="form-control" placeholder="Date" required ng-model="knockoutForm.date">
+              <input type="text" class="form-control" placeholder="Date" ng-model="knockoutForm.date">
             </div>
             <div class="form-group">
               <label class="sr-only">Time:</label>
-              <input type="number" class="form-control" placeholder="Minutes" required ng-model="knockoutForm.time">
+              <input type="number" class="form-control" placeholder="Time" ng-model="knockoutForm.time">
             </div>
             <div class="form-group">
               <label class="sr-only">Starter:</label>
-              <select class="form-control" required ng-model="knockoutForm.starter" ng-options="player for player in players">
+              <select class="form-control" ng-model="knockoutForm.starter" ng-options="player for player in players">
                 <option value="">Starter</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Winner:</label>
-              <select class="form-control" required ng-model="knockoutForm.winner" ng-options="player for player in players">
+              <select class="form-control" ng-model="knockoutForm.winner" ng-options="player for player in players">
                 <option value="">Winner</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Winner balls:</label>
-              <select class="form-control" required ng-model="knockoutForm.winnerBalls" ng-options="number for number in [8,7,6,5,4,3,2,1,0]">
-                <option value="">Winner balls</option>
+              <select class="form-control" ng-model="knockoutForm.winnerBalls" ng-options="number for number in [8,7,6,5,4,3,2,1,0]">
+                <option value="">W</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Loser balls:</label>
-              <select class="form-control" required ng-model="knockoutForm.loserBalls" ng-options="number for number in [0,1,2,3,4,5,6,7,8]">
-                <option value="">Loser balls</option>
+              <select class="form-control" ng-model="knockoutForm.loserBalls" ng-options="number for number in [0,1,2,3,4,5,6,7,8]">
+                <option value="">L</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-default pull-right" ng-disabled="!knockoutForm">Update Result</button>
+            <button type="submit" class="btn btn-default pull-right" ng-disabled="!knockoutForm">Update</button>
           </form>
         </div>
       </div>
@@ -353,18 +339,24 @@
       }
     });
 
-    app.controller('MatchesController', function($scope, $route, Match, groups, players) {
+    app.controller('MatchesController', function($scope, $route, Match, groups, players, dateFilter) {
       Match.query(function(matches) {
         $scope.matches = matches;
-        $scope.match = new Match({winnerBalls: 8, loserBalls: 0});
       });
       $scope.groups = groups;
       $scope.players = players;
+      $scope.isFoul = function(match) {
+        return match.winnerBalls && match.winnerBalls !== 8;
+      }
       $scope.addMatch = function() {
-        $scope.match.date = new Date();
-        $scope.match.$save();
+        $scope.matchForm.$save($scope.resetForm);
         $route.reload();
       }
+      $scope.resetForm = function() {
+        $scope.matchForm = new Match({date: new Date(), winnerBalls: 8, loserBalls: 0});
+        $scope.matchForm.date = dateFilter($scope.matchForm.date, 'MMM d');
+      }
+      $scope.resetForm();
     });
 
     app.controller('PointsController', function($scope, Match, groups) {
@@ -421,7 +413,7 @@
       $scope.$watch('knockout', function(knockout) {
         if (knockout) {
           $scope.knockoutForm = angular.copy(knockout);
-          $scope.knockoutForm.date = dateFilter($scope.knockoutForm.date, 'yyyy-MM-dd');
+          $scope.knockoutForm.date = dateFilter($scope.knockoutForm.date, 'MMM d');
           $scope.players = [$scope.knockoutForm.player, $scope.knockoutForm.opponent];
         } else {
           $scope.resetForm();
