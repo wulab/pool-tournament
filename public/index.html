@@ -325,11 +325,11 @@
     });
 
     app.factory('Match', function($resource) {
-      return $resource('/matches/:id', {format: 'json'}, {update: {method: 'PUT', params: {id: '@id'}}});
+      return $resource('/matches/:id', {id: '@id', format: 'json'}, {update: {method: 'PUT'}});
     });
 
     app.factory('Knockout', function($resource) {
-      return $resource('/knockouts/:id', {format: 'json'}, {update: {method: 'PUT', params: {id: '@id'}}});
+      return $resource('/knockouts/:id', {id: '@id', format: 'json'}, {update: {method: 'PUT'}});
     });
 
     app.controller('AppController', function($scope, $location) {
@@ -420,8 +420,8 @@
         }
       });
       $scope.updateKnockout = function() {
-        $scope.knockoutForm.$update(function(knockout) {
-          angular.copy(knockout, $scope.knockout);  // avoid page reload
+        $scope.knockoutForm.$update(function() {
+          $scope.knockout.$get();
           $scope.resetForm();
         });
       }
