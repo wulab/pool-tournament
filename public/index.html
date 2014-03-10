@@ -85,10 +85,14 @@
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.2/d3.min.js"></script>
+
+  <!-- AngularJS -->
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-resource.min.js"></script>
-  <script src="http://mbostock.github.com/d3/d3.v2.js"></script>
+
+  <!-- AngularJS templates -->
   <script type="text/ng-template" id="matches.html">
     <!-- Match result form -->
     <div class="row">
@@ -198,7 +202,7 @@
     <!-- Tournament bracket -->
     <div class="row">
       <div id="chart"></div>
-      <script src="bracketd3.js" />
+      <script src="bracketd3.js"></script>
     </div>
 
     <!-- Knockout result form -->
@@ -288,9 +292,12 @@
       </div>
     </div>
   </script>
+
+  <!-- PoolTournament -->
   <script>
     var app = angular.module('PoolTournament', ['ngRoute', 'ngResource']);
 
+    // Constants
     app.value('groups', ['A', 'B', 'C', 'D']);
     app.value('players', [
       "Art", "Bas", "Boat", "Book", "Fifth", "Ing", "Jo", "Kelly", "Lhung",
@@ -307,6 +314,7 @@
       '2D': null,
     });
 
+    // Routes
     app.config(function($routeProvider, $locationProvider) {
       $routeProvider.when('/', {
         controller: 'MatchesController',
@@ -331,6 +339,8 @@
       $locationProvider.html5Mode(true);
     });
 
+
+    // Services
     app.factory('Match', function($resource) {
       return $resource('/matches/:id', {id: '@id', format: 'json'}, {update: {method: 'PUT'}});
     });
@@ -346,6 +356,7 @@
       }
     });
 
+    // Controllers
     app.controller('MatchesController', function($scope, $route, Match, groups, players, dateFilter) {
       Match.query(function(matches) {
         $scope.matches = matches;
