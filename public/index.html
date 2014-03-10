@@ -221,13 +221,13 @@
             </div>
             <div class="form-group">
               <label class="sr-only">Starter:</label>
-              <select class="form-control" ng-model="knockoutForm.starter" ng-options="player for player in players">
+              <select class="form-control" ng-model="knockoutForm.starter" ng-options="playerName(player) for player in players">
                 <option value="">Starter</option>
               </select>
             </div>
             <div class="form-group">
               <label class="sr-only">Winner:</label>
-              <select class="form-control" ng-model="knockoutForm.winner" ng-options="player for player in players">
+              <select class="form-control" ng-model="knockoutForm.winner" ng-options="playerName(player) for player in players">
                 <option value="">Winner</option>
               </select>
             </div>
@@ -272,7 +272,7 @@
                 <span ng-if="!match.time">—</span>
                 <span ng-if="match.time">{{ match.time }} min</span>
               </td>
-              <td class="text-right" ng-class="{winner: match.player === match.winner, starter: match.player === match.starter}">{{ match.player }}</td>
+              <td class="text-right" ng-class="{winner: match.player === match.winner, starter: match.player === match.starter}">{{ playerName(match.player) }}</td>
               <td class="text-center" ng-class="{foul: isFoul(match)}">
                 <span ng-if="!match.winner">—</span>
                 <span ng-if="match.winner">
@@ -280,13 +280,13 @@
                   {{ match.opponent === match.winner ? match.winnerBalls : match.loserBalls }}
                 </span>
               </td>
-              <td ng-class="{winner: match.opponent === match.winner, starter: match.opponent === match.starter}">{{ match.opponent }}</td>
+              <td ng-class="{winner: match.opponent === match.winner, starter: match.opponent === match.starter}">{{ playerName(match.opponent) }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    
+
     <div id="chart"></div>
     <script src="bracketd3.js"></script>
 
@@ -299,6 +299,16 @@
       "Art", "Bas", "Boat", "Book", "Fifth", "Ing", "Jo", "Kelly", "Lhung",
       "Michael", "Neng", "Neung", "North", "Nut", "Phat", "Sunny"
     ]);
+    app.value('positions', {
+      '1A': 'Neng',
+      '2A': 'Ing',
+      '1B': 'Sunny',
+      '2B': 'North',
+      '1C': 'Neung',
+      '2C': 'Kelly',
+      '1D': null,
+      '2D': null,
+    });
 
     app.config(function($routeProvider, $locationProvider) {
       $routeProvider.when('/', {
@@ -398,7 +408,7 @@
       }
     });
 
-    app.controller('KnockoutController', function($scope, Knockout, dateFilter) {
+    app.controller('KnockoutController', function($scope, Knockout, dateFilter, positions) {
       Knockout.query(function(knockouts) {
         $scope.knockouts = _.sortBy(knockouts, 'number');
         $scope.rounds = [
@@ -429,6 +439,9 @@
         delete $scope.knockout;
         delete $scope.knockoutForm;
         delete $scope.players;
+      }
+      $scope.playerName = function(position) {
+        return positions[position] || position;
       }
     });
   </script>
