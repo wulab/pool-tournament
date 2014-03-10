@@ -201,7 +201,7 @@
   <script type="text/ng-template" id="knockout.html">
     <!-- Tournament bracket -->
     <div class="row">
-      <bracket data="fixtures"></bracket>
+      <bracket data="fixtures" name="playerName"></bracket>
     </div>
 
     <!-- Knockout result form -->
@@ -311,6 +311,54 @@
       '2C': 'Kelly',
       '1D': null,
       '2D': null,
+      'W25': null,
+      'W26': null,
+      'W27': null,
+      'W28': null,
+      'W29': null,
+      'W30': null,
+      'W31': null
+    });
+    app.value('fixtures', {
+      name: "W31",
+      "left": [{
+        "name": "W29",
+        "left": [
+          {
+            "name": "W25",
+            "left": [
+              {"name": "1A"},
+              {"name": "2B"}
+            ]
+          },
+          {
+            "name": "W26",
+            "left": [
+              {"name": "1C"},
+              {"name": "2D"}
+            ]
+          }
+        ],
+      }],
+      right: [{
+        "name": "W30",
+        "right": [
+          {
+            "name": "W27",
+            "right": [
+              {"name": "2A"},
+              {"name": "1B"}
+            ]
+          },
+          {
+            "name": "W28",
+            "right": [
+              {"name": "2C"},
+              {"name": "1D"}
+            ]
+          }
+        ]
+      }]
     });
 
     // Routes
@@ -359,7 +407,8 @@
       return {
         restrict: 'E',
         scope: {
-          data: '='
+          data: '=',
+          name: '='
         },
         link: function(scope, element, attrs) {
 
@@ -376,18 +425,18 @@
 
           var getChildren = function(d) {
                 var a = [];
-                if (d.winners) {
-                  for (var i = 0; i < d.winners.length; i++) {
-                    d.winners[i].isRight = false;
-                    d.winners[i].parent = d;
-                    a.push(d.winners[i]);
+                if (d.left) {
+                  for (var i = 0; i < d.left.length; i++) {
+                    d.left[i].isRight = false;
+                    d.left[i].parent = d;
+                    a.push(d.left[i]);
                   }
                 }
-                if (d.challengers) {
-                  for (var i = 0; i < d.challengers.length; i++) {
-                    d.challengers[i].isRight = true;
-                    d.challengers[i].parent = d;
-                    a.push(d.challengers[i]);
+                if (d.right) {
+                  for (var i = 0; i < d.right.length; i++) {
+                    d.right[i].isRight = true;
+                    d.right[i].parent = d;
+                    a.push(d.right[i]);
                   }
                 }
                 return a.length ? a : null;
@@ -426,8 +475,8 @@
             root.x0 = height / 2;
             root.y0 = width / 2;
 
-            var t1 = d3.layout.tree().size([height, halfWidth]).children(function(d) { return d.winners; }),
-                t2 = d3.layout.tree().size([height, halfWidth]).children(function(d) { return d.challengers; });
+            var t1 = d3.layout.tree().size([height, halfWidth]).children(function(d) { return d.left; }),
+                t2 = d3.layout.tree().size([height, halfWidth]).children(function(d) { return d.right; });
             t1.nodes(root);
             t2.nodes(root);
 
@@ -455,7 +504,7 @@
             var nodes = toArray(source);
 
             // Normalize for fixed-depth.
-            nodes.forEach(function(d) { d.y = d.depth * 180 + halfWidth; });
+            nodes.forEach(function(d) { d.y = d.depth * 150 + halfWidth; });
 
             // Update the nodes…
             var node = vis.selectAll("g.node")
@@ -473,7 +522,7 @@
             nodeEnter.append("text")
                      .attr("dy", function(d) { return d.isRight ? 14 : -8;})
                      .attr("text-anchor", "middle")
-                     .text(function(d) { return d.name; })
+                     .text(function(d) { return scope.name(d.name); })
                      .style("fill-opacity", 1e-6);
 
             // Transition nodes to their new position.
@@ -605,7 +654,7 @@
       }
     });
 
-    app.controller('KnockoutController', function($scope, Knockout, dateFilter, positions) {
+    app.controller('KnockoutController', function($scope, Knockout, dateFilter, positions, fixtures) {
       Knockout.query(function(knockouts) {
         $scope.knockouts = _.sortBy(knockouts, 'number');
         $scope.rounds = [
@@ -640,41 +689,7 @@
       $scope.playerName = function(position) {
         return positions[position] || position;
       }
-      $scope.fixtures = {
-        "name": "W29 — W30",
-        "winners": [
-          {
-            "name": "W25",
-            "winners": [
-              {"name": "Neng"},
-              {"name": "North"}
-            ]
-          },
-          {
-            "name": "W26",
-            "winners": [
-              {"name": "Neung"},
-              {"name": "2D"}
-            ]
-          }
-        ],
-        "challengers": [
-          {
-            "name": "W27",
-            "challengers": [
-              {"name": "Ing"},
-              {"name": "Sunny"}
-            ]
-          },
-          {
-            "name": "W28",
-            "challengers": [
-              {"name": "Kelly"},
-              {"name": "1D"}
-            ]
-          }
-        ]
-      }
+      $scope.fixtures = fixtures;
     });
   </script>
 </head>
