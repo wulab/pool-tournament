@@ -201,7 +201,7 @@
   <script type="text/ng-template" id="knockout.html">
     <!-- Tournament bracket -->
     <div class="row">
-      <bracket data="fixtures" name="playerName"></bracket>
+      <bracket data="fixtures"></bracket>
     </div>
 
     <!-- Knockout result form -->
@@ -320,7 +320,7 @@
       'W31': null
     });
     app.value('fixtures', {
-      name: "W31",
+      "name": "W31",
       "left": [{
         "name": "W29",
         "left": [
@@ -340,7 +340,7 @@
           }
         ],
       }],
-      right: [{
+      "right": [{
         "name": "W30",
         "right": [
           {
@@ -406,11 +406,13 @@
     app.directive('bracket', function() {
       return {
         restrict: 'E',
-        scope: {
-          data: '=',
-          name: '='
-        },
+        scope: {data: '='},
         link: function(scope, element, attrs) {
+
+          // Update bracket when data changes.
+          scope.$watch('data', function(data) {
+            if (data) { render(angular.copy(data)); }
+          }, true);
 
           // D3 Bracket Layout
           // http://bl.ocks.org/jdarling/2503502
@@ -420,8 +422,7 @@
               halfWidth = width / 2,
               height = 500 - margin.top - margin.bottom,
               i = 0,
-              duration = 500,
-              root;
+              duration = 500
 
           var getChildren = function(d) {
                 var a = [];
@@ -468,10 +469,7 @@
                       .append("g")
                       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-          init();
-
-          function init() {
-            root = scope.data;
+          function render(root) {
             root.x0 = height / 2;
             root.y0 = width / 2;
 
@@ -490,6 +488,7 @@
           }
 
           function update(source) {
+            // Compute the new tree layout.
             var toArray = function(item, arr) {
               arr = arr || [];
               var i = 0, l = item.children ? item.children.length : 0;
@@ -499,8 +498,6 @@
               }
               return arr;
             };
-
-            // Compute the new tree layout.
             var nodes = toArray(source);
 
             // Normalize for fixed-depth.
@@ -522,7 +519,7 @@
             nodeEnter.append("text")
                      .attr("dy", function(d) { return d.isRight ? 14 : -8;})
                      .attr("text-anchor", "middle")
-                     .text(function(d) { return scope.name(d.name); })
+                     .text(function(d) { return d.name; })
                      .style("fill-opacity", 1e-6);
 
             // Transition nodes to their new position.
@@ -655,29 +652,50 @@
     });
 
     app.controller('KnockoutController', function($scope, Knockout, dateFilter, positions, fixtures) {
-      Knockout.query(function(knockouts) {
-        $scope.knockouts = _.sortBy(knockouts, 'number');
-        $scope.rounds = [
-          {title: 'Round of 8', matches: $scope.knockouts.slice(0,4)},
-          {title: 'Semi-finals', matches: $scope.knockouts.slice(4,6)},
-          {title: 'Final', matches: $scope.knockouts.slice(-1)}
-        ];
-      });
+      $scope.refresh = function() {
+        Knockout.query(function(knockouts) {
+          $scope.knockouts = _.sortBy(knockouts, 'number');
+          $scope.rounds = [
+            {title: 'Round of 8', matches: $scope.knockouts.slice(0,4)},
+            {title: 'Semi-finals', matches: $scope.knockouts.slice(4,6)},
+            {title: 'Final', matches: $scope.knockouts.slice(-1)}
+          ];
+          updatePositions();
+          $scope.fixtures = latestFixtures();
+        });
+
+        function updatePositions() {
+          _.each($scope.knockouts, function(knockout) {
+            if (knockout.winner) {
+              positions['W' + knockout.number] = $scope.playerName(knockout.winner);
+            }
+          });
+        }
+
+        function latestFixtures() {
+          var _fixtures = angular.copy(fixtures);
+          updateFixtures(_fixtures);
+          return _fixtures;
+        }
+
+        function updateFixtures(fixture) {
+          _.each(angular.copy(fixture), function(value, key) {
+            if (key === 'name') {
+              fixture[key] = $scope.playerName(value);
+            } else if (angular.isArray(value)) {
+              _.each(value, function(element, index) {
+                updateFixtures(fixture[key][index]);
+              });
+            }
+          });
+        }
+      }
       $scope.isFoul = function(match) {
         return match.winnerBalls && match.winnerBalls !== 8;
       }
-      $scope.$watch('knockout', function(knockout) {
-        if (knockout) {
-          $scope.knockoutForm = angular.copy(knockout);
-          $scope.knockoutForm.date = dateFilter($scope.knockoutForm.date, 'MMM d');
-          $scope.players = [$scope.knockoutForm.player, $scope.knockoutForm.opponent];
-        } else {
-          $scope.resetForm();
-        }
-      });
       $scope.updateKnockout = function() {
-        $scope.knockoutForm.$update(function() {
-          $scope.knockout.$get();
+        $scope.knockoutForm.$update(function(knockout) {
+          $scope.refresh();
           $scope.resetForm();
         });
       }
@@ -689,7 +707,18 @@
       $scope.playerName = function(position) {
         return positions[position] || position;
       }
-      $scope.fixtures = fixtures;
+
+      $scope.$watch('knockout', function(knockout) {
+        if (knockout) {
+          $scope.knockoutForm = angular.copy(knockout);
+          $scope.knockoutForm.date = dateFilter($scope.knockoutForm.date, 'MMM d');
+          $scope.players = [$scope.knockoutForm.player, $scope.knockoutForm.opponent];
+        } else {
+          $scope.resetForm();
+        }
+      });
+
+      $scope.refresh();
     });
   </script>
 </head>
