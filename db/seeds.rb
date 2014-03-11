@@ -11,6 +11,7 @@ Match.create([
   {group: 'A', date: 'Feb 1', winner: 'Ing', winner_balls: 5, loser: 'Phat', loser_balls: 5, foul: true},
   {group: 'A', date: 'Feb 21', winner: 'Ing', winner_balls: 8, loser: 'Michael', loser_balls: 5, foul: false},
   {group: 'A', date: 'Mar 3', winner: 'Neng', winner_balls: 8, loser: 'Phat', loser_balls: 3, foul: false},
+  {group: 'A', date: 'Mar 7', winner: 'Phat', winner_balls: 8, loser: 'Michael', loser_balls: 6, foul: false},
 
   {group: 'B', date: 'Feb 1', winner: 'North', winner_balls: 8, loser: 'Nut', loser_balls: 7, foul: false},
   {group: 'B', date: 'Feb 1', winner: 'Jo', winner_balls: 8, loser: 'Nut', loser_balls: 7, foul: false},
@@ -29,6 +30,9 @@ Match.create([
   {group: 'D', date: 'Feb 1', winner: 'Boat', winner_balls: 8, loser: 'Fifth', loser_balls: 6, foul: false},
   {group: 'D', date: 'Feb 1', winner: 'Fifth', winner_balls: 7, loser: 'Book', loser_balls: 8, foul: true},
   {group: 'D', date: 'Feb 1', winner: 'Boat', winner_balls: 8, loser: 'Book', loser_balls: 6, foul: false},
+  {group: 'D', date: 'Mar 7', winner: 'Fifth', winner_balls: 8, loser: 'Bas', loser_balls: 3, foul: false},
+  {group: 'D', date: 'Mar 7', winner: 'Boat', winner_balls: 7, loser: 'Bas', loser_balls: 8, foul: true},
+  {group: 'D', date: 'Mar 11', winner: 'Bas', winner_balls: 8, loser: 'Book', loser_balls: 5, foul: false},
 ])
 
 Knockout.create([
