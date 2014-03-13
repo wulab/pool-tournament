@@ -56,6 +56,9 @@
     }
 
     /* Tournament bracket */
+    .scroll-x {
+      overflow-x: scroll;
+    }
     .node circle {
       cursor: pointer;
       fill: #fff;
@@ -200,7 +203,7 @@
   </script>
   <script type="text/ng-template" id="knockout.html">
     <!-- Tournament bracket -->
-    <div class="row">
+    <div class="row scroll-x">
       <bracket data="fixtures"></bracket>
     </div>
 
@@ -409,20 +412,19 @@
         scope: {data: '='},
         link: function(scope, element, attrs) {
 
-          // Update bracket when data changes.
+          // Re-render bracket when data changes
           scope.$watch('data', function(data) {
             if (data) { render(angular.copy(data)); }
           }, true);
 
           // D3 Bracket Layout
           // http://bl.ocks.org/jdarling/2503502
-
-          var margin = {top: 30, right: 10, bottom: 10, left: 10},
+          var margin = {top: 0, right: 0, bottom: 0, left: 0},
               width = 960 - margin.left - margin.right,
               halfWidth = width / 2,
               height = 500 - margin.top - margin.bottom,
               i = 0,
-              duration = 500
+              duration = 500;
 
           var getChildren = function(d) {
                 var a = [];
@@ -450,7 +452,7 @@
                 var target = calcLeft(d.target);
                 var hy = (target.y - source.y) / 2;
                 if (d.isRight) { hy = -hy };
-                return "M" + source.y + "," + source.x + "H" + (source.y+hy) + "V" + target.x + "H" + target.y;
+                return "M" + source.y + "," + source.x + "H" + (source.y + hy) + "V" + target.x + "H" + target.y;
               };
           var connector = elbow;
 
@@ -484,10 +486,7 @@
             }
             rebuildChildren(root);
             root.isRight = false;
-            update(root);
-          }
 
-          function update(source) {
             // Compute the new tree layout.
             var toArray = function(item, arr) {
               arr = arr || [];
@@ -498,7 +497,7 @@
               }
               return arr;
             };
-            var nodes = toArray(source);
+            var nodes = toArray(root);
 
             // Normalize for fixed-depth.
             nodes.forEach(function(d) { d.y = d.depth * 150 + halfWidth; });
@@ -510,7 +509,7 @@
             // Enter any new nodes at the parent's previous position.
             var nodeEnter = node.enter().append("g")
                                 .attr("class", "node")
-                                .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; });
+                                .attr("transform", function(d) { return "translate(" + root.y0 + "," + root.x0 + ")"; });
 
             nodeEnter.append("circle")
                      .attr("r", 1e-6)
@@ -541,7 +540,7 @@
             var nodeExit = node.exit().transition()
                                .duration(duration)
                                .attr("transform", function(d) {
-                                  p = calcLeft(d.parent || source);
+                                  p = calcLeft(d.parent || root);
                                   return "translate(" + p.y + "," + p.x + ")";
                                })
                                .remove();
@@ -560,7 +559,7 @@
             link.enter().insert("path", "g")
                         .attr("class", "link")
                         .attr("d", function(d) {
-                          var o = {x: source.x0, y: source.y0};
+                          var o = {x: root.x0, y: root.y0};
                           return connector({source: o, target: o});
                         });
 
@@ -573,7 +572,7 @@
             link.exit().transition()
                 .duration(duration)
                 .attr("d", function(d) {
-                  var o = calcLeft(d.source || source);
+                  var o = calcLeft(d.source || root);
                   if (d.source.isRight) { o.y -= halfWidth - (d.target.y - d.source.y); }
                   else { o.y += halfWidth - (d.target.y - d.source.y); }
                   return connector({source: o, target: o});
