@@ -201,7 +201,7 @@
       </div>
     </div>
   </script>
-  <script type="text/ng-template" id="knockout.html">
+  <script type="text/ng-template" id="knockouts.html">
     <!-- Tournament bracket -->
     <div class="row scroll-x">
       <bracket data="fixtures"></bracket>
@@ -368,17 +368,36 @@
     app.config(function($routeProvider, $locationProvider) {
       $routeProvider.when('/', {
         controller: 'MatchesController',
-        templateUrl: 'matches.html'
+        templateUrl: 'matches.html',
+        resolve: {
+          matches: function($location, Match) {
+            return Match.query(function(matches) {
+              if (matches.length >= 24) {
+                $location.path('/knockout');
+              }
+            });
+          }
+        }
       });
 
-      $routeProvider.when('/points', {
+      $routeProvider.when('/group', {
+        controller: 'MatchesController',
+        templateUrl: 'matches.html',
+        resolve: {
+          matches: function(Match) {
+            return Match.query();
+          }
+        }
+      });
+
+      $routeProvider.when('/point', {
         controller: 'PointsController',
         templateUrl: 'points.html'
       });
 
       $routeProvider.when('/knockout', {
-        controller: 'KnockoutController',
-        templateUrl: 'knockout.html'
+        controller: 'KnockoutsController',
+        templateUrl: 'knockouts.html'
       });
 
       $routeProvider.otherwise({
@@ -591,10 +610,8 @@
     });
 
     // Controllers
-    app.controller('MatchesController', function($scope, $route, Match, groups, players, dateFilter) {
-      Match.query(function(matches) {
-        $scope.matches = matches;
-      });
+    app.controller('MatchesController', function($scope, $location, $route, Match, matches, groups, players, dateFilter) {
+      $scope.matches = matches;
       $scope.groups = groups;
       $scope.players = players;
       $scope.isFoul = function(match) {
@@ -650,7 +667,7 @@
       }
     });
 
-    app.controller('KnockoutController', function($scope, Knockout, dateFilter, positions, fixtures) {
+    app.controller('KnockoutsController', function($scope, Knockout, dateFilter, positions, fixtures) {
       $scope.refresh = function() {
         Knockout.query(function(knockouts) {
           $scope.knockouts = _.sortBy(knockouts, 'number');
@@ -736,7 +753,7 @@
       </div>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
-          <li ng-class="{active: isActive('/') || isActive('/points')}"><a href="/">Group stage</a></li>
+          <li ng-class="{active: !isActive('/knockout')}"><a href="/group">Group stage</a></li>
           <li ng-class="{active: isActive('/knockout')}"><a href="/knockout">Knockout stage</a></li>
         </ul>
       </div>
@@ -753,8 +770,8 @@
     <div class="container">
       <div class="row">
         <ul class="nav navbar-nav">
-          <li ng-class="{active: isActive('/')}"><a href="/">Matches</a></li>
-          <li ng-class="{active: isActive('/points')}"><a href="/points">Points</a></li>
+          <li ng-class="{active: isActive('/') || isActive('/group')}"><a href="/group">Matches</a></li>
+          <li ng-class="{active: isActive('/point')}"><a href="/point">Points</a></li>
         </ul>
       </div>
     </div>
