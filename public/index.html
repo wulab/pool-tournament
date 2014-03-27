@@ -73,6 +73,84 @@
       stroke: #ccc;
       stroke-width: 1.5px;
     }
+
+    /* Statistic */
+    .stats {
+      text-align: center;
+      padding: 35px 0;
+      background: #FAFBFB;
+    }
+
+    .stats .container{
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .stats .row.social {
+      text-align: left;
+      margin-top: 30px;
+    }
+
+    .stats .row p.number {
+      font-weight: 100;
+      font-size: 44px
+    }
+
+    .stats .row.social .box {
+      margin-bottom: 30px;
+      min-height: 100px;
+    }
+
+    /* Bar Chart*/
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .bar {
+      fill: orange;
+    }
+
+    .bar:hover {
+      fill: orangered ;
+    }
+
+    .x.axis path {
+      display: none;
+    }
+
+    .d3-tip {
+      line-height: 1;
+      font-weight: bold;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      border-radius: 2px;
+    }
+
+    /* Creates a small triangle extender for the tooltip */
+    .d3-tip:after {
+      box-sizing: border-box;
+      display: inline;
+      font-size: 10px;
+      width: 100%;
+      line-height: 1;
+      color: rgba(0, 0, 0, 0.8);
+      content: "\25BC";
+      position: absolute;
+      text-align: center;
+    }
+
+    /* Style northward tooltips differently */
+    .d3-tip.n:after {
+      margin: -1px 0 0 0;
+      top: 100%;
+      left: 0;
+    }
+
+
   </style>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -94,6 +172,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-resource.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 
   <!-- AngularJS templates -->
   <script type="text/ng-template" id="matches.html">
@@ -112,6 +191,7 @@
               <label class="sr-only">Date:</label>
               <input type="text" class="form-control" placeholder="Date" ng-model="matchForm.date">
             </div>
+            <img src="http://placehold.it/30x30">
             <div class="form-group">
               <label class="sr-only">Winner:</label>
               <select class="form-control" ng-model="matchForm.winner" ng-options="player for player in players">
@@ -121,9 +201,12 @@
             <div class="form-group">
               <label class="sr-only">Winner balls:</label>
               <select class="form-control" ng-model="matchForm.winnerBalls" ng-options="number for number in [8,7,6,5,4,3,2,1,0]">
-                <option value="">W</option>
+                <option value="">Score</option>
               </select>
             </div>
+            VS
+
+            <img src="http://placehold.it/30x30">
             <div class="form-group">
               <label class="sr-only">Loser:</label>
               <select class="form-control" ng-model="matchForm.loser" ng-options="player for player in players">
@@ -133,7 +216,7 @@
             <div class="form-group">
               <label class="sr-only">Loser balls:</label>
               <select class="form-control" ng-model="matchForm.loserBalls" ng-options="number for number in [0,1,2,3,4,5,6,7,8]">
-                <option value="">L</option>
+                <option value="">Score</option>
               </select>
             </div>
             <button type="submit" class="btn btn-default pull-right" ng-disabled="!matchForm">Add</button>
@@ -296,6 +379,70 @@
   </script>
   <script type="text/ng-template" id="leaderboards.html">
     <!-- TODO -->
+
+    <div id="bar-chart-rank">
+      <h4 id="thumbnails-custom-content">Personal statistics games</h4>
+      <script src="barData.js" />
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats">
+      <div class="container">
+        <h3 class="header">Oozou Stats</h3>
+        <div class="row big">
+          <div class="col-sm-4">
+            <img alt="Lines of Code Committed" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_codes-d5e19d28949cb888cce138c73e6d14fb.png">
+            <p class="number">823,500</p>
+            <h4>Total Players</h4>
+          </div>
+          <div class="col-sm-4">
+            <img alt="Days of Coding Experience" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_experience-825e82ff06b10350d13c93d470d5b776.png">
+            <p class="number">27,450</p>
+            <h4>Total Matches</h4><h4>
+          </h4></div>
+          <div class="col-sm-4">
+            <img alt="Project Deploys" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_project_launched-70209baf7f2f51501fa32c3a4446cadb.png">
+            <p class="number">4,340</p>
+            <h4>Total Pokets</h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-2">
+            <img alt="Coke Zeros Consumed" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_coke-3b2daa79183940002f3f947db7659cb1.png">
+            <p class="number">36,600</p>
+            <h4>Days of tounament</h4>
+          </div>
+          <div class="col-sm-2">
+            <img alt="Games of Pool this Year" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_pool-9e6279df5687afd58fe466d8c1ca5f25.png">
+            <p class="number">420</p>
+            <h4>Total faul</h4>
+          </div>
+          <div class="col-sm-2">
+            <img alt="Spotify Tracks Listened To" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_spotify-90b066a0100e4a2483c83b7ec24fffdf.png">
+            <p class="number">208,925</p>
+            <h4>Out of table</h4>
+          </div>
+          <div class="col-sm-2">
+            <img alt="Coffees Consumed" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_coffee-48ce1ed02a6ae1c987527e6d9b9a1fd7.png">
+            <p class="number">22,875</p>
+            <h4>Total of cheated</h4>
+          </div>
+          <div class="col-sm-2">
+            <img alt="User Stories Delivered" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_user_stories-45026519fc0a4f7537511a3323633e67.png">
+            <p class="number">7,812</p>
+            <h4>User Stories Delivered</h4>
+          </div>
+          <div class="col-sm-2">
+            <img alt="Days in Business" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_in_business-3bbf70d7f6cd16ef45f2059e5dcf70b2.png">
+            <p class="number">1,525</p>
+            <h4>Days in Business</h4>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <!-- Statistics end -->
+
   </script>
 
   <!-- PoolTournament -->
