@@ -73,82 +73,6 @@
       stroke: #ccc;
       stroke-width: 1.5px;
     }
-
-    /* Statistic */
-    .stats {
-      text-align: center;
-      padding: 35px 0;
-      background: #FAFBFB;
-    }
-
-    .stats .container{
-      margin-right: auto;
-      margin-left: auto;
-    }
-
-    .stats .row.social {
-      text-align: left;
-      margin-top: 30px;
-    }
-
-    .stats .row p.number {
-      font-weight: 100;
-      font-size: 44px
-    }
-
-    .stats .row.social .box {
-      margin-bottom: 30px;
-      min-height: 100px;
-    }
-
-    /* Bar chart */
-    .axis path,
-    .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
-
-    .bar {
-      fill: orange;
-    }
-
-    .bar:hover {
-      fill: orangered ;
-    }
-
-    .x.axis path {
-      display: none;
-    }
-
-    .d3-tip {
-      line-height: 1;
-      font-weight: bold;
-      padding: 12px;
-      background: rgba(0, 0, 0, 0.8);
-      color: #fff;
-      border-radius: 2px;
-    }
-
-    /* Creates a small triangle extender for the tooltip */
-    .d3-tip:after {
-      box-sizing: border-box;
-      display: inline;
-      font-size: 10px;
-      width: 100%;
-      line-height: 1;
-      color: rgba(0, 0, 0, 0.8);
-      content: "\25BC";
-      position: absolute;
-      text-align: center;
-    }
-
-    /* Style northward tooltips differently */
-    .d3-tip.n:after {
-      margin: -1px 0 0 0;
-      top: 100%;
-      left: 0;
-    }
   </style>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -170,7 +94,6 @@
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-resource.min.js"></script>
-  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 
   <!-- AngularJS templates -->
   <script type="text/ng-template" id="matches.html">
@@ -238,7 +161,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="match in matches | filter:{group:group} | orderBy:match.date">
+            <tr ng-repeat="match in matches | filter:{group:group} | orderBy:'date'">
               <td class="text-center">{{ $index + 1 }}</td>
               <td>{{ match.date | date:'MMM d' }}</td>
               <td class="text-right">{{ match.winner }}</td>
@@ -273,7 +196,7 @@
                 <td class="text-center">{{ (matches | filter:player).length }}</td>
                 <td class="text-center">{{ (matches | filter:{winner:player}).length }}</td>
                 <td class="text-center">{{ (matches | filter:{loser:player}).length }}</td>
-                <td class="text-center">{{ countPocketed(matches, player) }}</td>
+                <td class="text-center">{{ countPockets(matches, player) }}</td>
                 <td class="text-center">{{ (matches | filter:{winner:player}).length * 3 }}</td>
               </tr>
             </tbody>
@@ -295,7 +218,7 @@
           <form class="form-inline" role="form" novalidate ng-submit="updateKnockout()">
             <div class="form-group">
               <label class="sr-only">Match #:</label>
-              <select class="form-control" ng-model="knockout" ng-options="match.number for match in knockouts | orderBy:match.number">
+              <select class="form-control" ng-model="knockout" ng-options="match.number for match in knockouts | orderBy:'number'">
                 <option value="">#</option>
               </select>
             </div>
@@ -353,7 +276,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="match in round.matches | orderBy:match.number">
+            <tr ng-repeat="match in round.matches | orderBy:'number'">
               <td class="text-center">{{ match.number }}</td>
               <td>{{ match.date | date:'MMM d' }}</td>
               <td class="text-center">
@@ -376,64 +299,160 @@
     </div>
   </script>
   <script type="text/ng-template" id="leaderboards.html">
-    <!-- Bar chart -->
-    <div id="bar-chart-rank">
-      <h4 id="thumbnails-custom-content">Personal statistics games</h4>
-      <script src="barData.js" />
+    <!-- Match stats -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Longest match</div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Date</th>
+                <th class="text-center">Time</th>
+                <th class="text-right"></th>
+                <th class="text-center">Results</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="result in results | filter:timeRecorded | orderBy:'-time' | limitTo:1">
+                <td class="text-center">{{ result.number }}</td>
+                <td>{{ result.date | date:'MMM d' }}</td>
+                <td class="text-center">
+                  <span>{{ result.time }} min</span>
+                </td>
+                <td class="text-right winner">{{ result.winner }}</td>
+                <td class="text-center" ng-class="{foul: isFoul(match)}">
+                  <span>{{ result.winnerBalls }} : {{ result.loserBalls }}</span>
+                </td>
+                <td>{{ result.loser }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Shortest match</div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Date</th>
+                <th class="text-center">Time</th>
+                <th class="text-right"></th>
+                <th class="text-center">Results</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="result in results | filter:timeRecorded | orderBy:'time' | limitTo:1">
+                <td class="text-center">{{ result.number }}</td>
+                <td>{{ result.date | date:'MMM d' }}</td>
+                <td class="text-center">
+                  <span>{{ result.time }} min</span>
+                </td>
+                <td class="text-right winner">{{ result.winner }}</td>
+                <td class="text-center" ng-class="{foul: isFoul(match)}">
+                  <span>{{ result.winnerBalls }} : {{ result.loserBalls }}</span>
+                </td>
+                <td>{{ result.loser }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
-    <!-- Tournament stats -->
-    <div class="stats">
-      <div class="container">
-        <h3 class="header">Oozou Stats</h3>
-        <div class="row big">
-          <div class="col-sm-4">
-            <img alt="Lines of Code Committed" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_codes-d5e19d28949cb888cce138c73e6d14fb.png">
-            <p class="number">823,500</p>
-            <h4>Total Players</h4>
-          </div>
-          <div class="col-sm-4">
-            <img alt="Days of Coding Experience" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_experience-825e82ff06b10350d13c93d470d5b776.png">
-            <p class="number">27,450</p>
-            <h4>Total Matches</h4><h4>
-          </h4></div>
-          <div class="col-sm-4">
-            <img alt="Project Deploys" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_project_launched-70209baf7f2f51501fa32c3a4446cadb.png">
-            <p class="number">4,340</p>
-            <h4>Total Pokets</h4>
-          </div>
+    <!-- Player stats -->
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">Most wins</div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Player</th>
+                <th class="text-center">Won</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="player in playerStats | orderBy:'-wins' | limitTo:5">
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td>{{ player.name }}</td>
+                <td class="text-center">{{ player.wins }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="row">
-          <div class="col-sm-2">
-            <img alt="Coke Zeros Consumed" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_coke-3b2daa79183940002f3f947db7659cb1.png">
-            <p class="number">36,600</p>
-            <h4>Days of tounament</h4>
-          </div>
-          <div class="col-sm-2">
-            <img alt="Games of Pool this Year" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_pool-9e6279df5687afd58fe466d8c1ca5f25.png">
-            <p class="number">420</p>
-            <h4>Total faul</h4>
-          </div>
-          <div class="col-sm-2">
-            <img alt="Spotify Tracks Listened To" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_spotify-90b066a0100e4a2483c83b7ec24fffdf.png">
-            <p class="number">208,925</p>
-            <h4>Out of table</h4>
-          </div>
-          <div class="col-sm-2">
-            <img alt="Coffees Consumed" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_coffee-48ce1ed02a6ae1c987527e6d9b9a1fd7.png">
-            <p class="number">22,875</p>
-            <h4>Total of cheated</h4>
-          </div>
-          <div class="col-sm-2">
-            <img alt="User Stories Delivered" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_user_stories-45026519fc0a4f7537511a3323633e67.png">
-            <p class="number">7,812</p>
-            <h4>User Stories Delivered</h4>
-          </div>
-          <div class="col-sm-2">
-            <img alt="Days in Business" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_in_business-3bbf70d7f6cd16ef45f2059e5dcf70b2.png">
-            <p class="number">1,525</p>
-            <h4>Days in Business</h4>
-          </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">Least wins</div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Player</th>
+                <th class="text-center">Won</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="player in playerStats | orderBy:'wins' | limitTo:5">
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td>{{ player.name }}</td>
+                <td class="text-center">{{ player.wins }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">Top pockets</div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Player</th>
+                <th class="text-center">Pocketed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="player in playerStats | orderBy:'-pockets' | limitTo:5">
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td>{{ player.name }}</td>
+                <td class="text-center">{{ player.pockets }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">Luckiest players</div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Player</th>
+                <th class="text-center">Won on a foul</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="player in playerStats | orderBy:'-foulWins' | limitTo:5">
+                <td class="text-center">{{ $index + 1 }}</td>
+                <td>{{ player.name }}</td>
+                <td class="text-center">{{ player.foulWins }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -845,11 +864,11 @@
         });
         return _.sortBy(players, function(player) {
           var wins = winCounts[player] || 0;
-          var pockets = $scope.countPocketed(matches, player);
+          var pockets = $scope.countPockets(matches, player);
           return [wins, pockets];
         }).reverse();
       }
-      $scope.countPocketed = function(matches, player) {
+      $scope.countPockets = function(matches, player) {
         return _.reduce(matches, function(counts, match){
           if (match.winner === player) {
             return counts + match.winnerBalls;
@@ -932,8 +951,46 @@
       $scope.refresh();
     });
 
-    app.controller('LeaderboardsController', function($scope) {
-      // TODO
+    app.controller('LeaderboardsController', function($scope, results, players) {
+      $scope.results = results;
+      $scope.playerStats = calcPlayerStats();
+      $scope.timeRecorded = function(result) { return result.time; };
+
+      function calcPlayerStats() {
+        var playerStats = [];
+        _.each(players, function(player) {
+          playerStats.push(
+            {
+              name: player,
+              wins: countWins(results, player),
+              foulWins: countFoulWins(results, player),
+              pockets: countPockets(results, player),
+            }
+          );
+        });
+        return playerStats;
+      }
+      function countPockets(matches, player) {
+        return _.reduce(matches, function(counts, match){
+          if (match.winner === player) {
+            return counts + match.winnerBalls;
+          } else if (match.loser === player) {
+            return counts + match.loserBalls;
+          } else {
+            return counts;
+          }
+        }, 0);
+      }
+      function countWins(matches, player) {
+        return _.filter(matches, function(match) {
+          return match.winner == player;
+        }).length;
+      }
+      function countFoulWins(matches, player) {
+        return _.filter(matches, function(match) {
+          return match.winner == player && match.foul;
+        }).length;
+      }
     });
   </script>
 </head>
