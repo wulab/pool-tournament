@@ -73,6 +73,30 @@
       stroke: #ccc;
       stroke-width: 1.5px;
     }
+
+    /* Stats */
+    .row.well {
+      margin-left: 0;
+      margin-right: 0;
+      padding-bottom: 0;
+    }
+    img.icon {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    p.number, h4 {
+      color: #636467;
+    }
+    p.number {
+      margin: 0;
+      font-size: 44px;
+      font-weight: 100;
+    }
+    h4 {
+      margin-top: 0;
+      margin-bottom: 29px;
+      font-weight: 200;
+    }
   </style>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -299,70 +323,22 @@
     </div>
   </script>
   <script type="text/ng-template" id="leaderboards.html">
-    <!-- Match stats -->
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="panel panel-default">
-          <div class="panel-heading">Longest match</div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="text-center">#</th>
-                <th>Date</th>
-                <th class="text-center">Time</th>
-                <th class="text-right"></th>
-                <th class="text-center">Results</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="result in results | filter:timeRecorded | orderBy:'-time' | limitTo:1">
-                <td class="text-center">{{ result.number }}</td>
-                <td>{{ result.date | date:'MMM d' }}</td>
-                <td class="text-center">
-                  <span>{{ result.time }} min</span>
-                </td>
-                <td class="text-right winner">{{ result.winner }}</td>
-                <td class="text-center" ng-class="{foul: isFoul(match)}">
-                  <span>{{ result.winnerBalls }} : {{ result.loserBalls }}</span>
-                </td>
-                <td>{{ result.loser }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <!-- Tournament stats -->
+    <div class="row well">
+      <div class="col-sm-4 text-center">
+        <img alt="Matches Played" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_codes-d5e19d28949cb888cce138c73e6d14fb.png">
+        <p class="number">{{ results.length }}</p>
+        <h4>Matches Played</h4>
       </div>
-
-      <div class="col-sm-12">
-        <div class="panel panel-default">
-          <div class="panel-heading">Shortest match</div>
-          <table class="table">
-            <thead>
-              <tr>
-                <th class="text-center">#</th>
-                <th>Date</th>
-                <th class="text-center">Time</th>
-                <th class="text-right"></th>
-                <th class="text-center">Results</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="result in results | filter:timeRecorded | orderBy:'time' | limitTo:1">
-                <td class="text-center">{{ result.number }}</td>
-                <td>{{ result.date | date:'MMM d' }}</td>
-                <td class="text-center">
-                  <span>{{ result.time }} min</span>
-                </td>
-                <td class="text-right winner">{{ result.winner }}</td>
-                <td class="text-center" ng-class="{foul: isFoul(match)}">
-                  <span>{{ result.winnerBalls }} : {{ result.loserBalls }}</span>
-                </td>
-                <td>{{ result.loser }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="col-sm-4 text-center">
+        <img alt="Balls Pocketed" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_experience-825e82ff06b10350d13c93d470d5b776.png">
+        <p class="number">{{ totalPockets }}</p>
+        <h4>Balls Pocketed</h4>
+      </div>
+      <div class="col-sm-4 text-center">
+        <img alt="Minutes Spent" class="icon" src="https://s3.amazonaws.com/oozou/assets/icn_project_launched-70209baf7f2f51501fa32c3a4446cadb.png">
+        <p class="number">{{ totalTime }}</p>
+        <h4>Minutes Spent</h4>
       </div>
     </div>
 
@@ -450,6 +426,73 @@
                 <td class="text-center">{{ $index + 1 }}</td>
                 <td>{{ player.name }}</td>
                 <td class="text-center">{{ player.foulWins }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Match stats -->
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Longest match</div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Date</th>
+                <th class="text-center">Time</th>
+                <th class="text-right"></th>
+                <th class="text-center">Results</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="result in results | filter:timeRecorded | orderBy:'-time' | limitTo:1">
+                <td class="text-center">{{ result.number }}</td>
+                <td>{{ result.date | date:'MMM d' }}</td>
+                <td class="text-center">
+                  <span>{{ result.time }} min</span>
+                </td>
+                <td class="text-right winner">{{ result.winner }}</td>
+                <td class="text-center" ng-class="{foul: isFoul(match)}">
+                  <span>{{ result.winnerBalls }} : {{ result.loserBalls }}</span>
+                </td>
+                <td>{{ result.loser }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="col-sm-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">Shortest match</div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="text-center">#</th>
+                <th>Date</th>
+                <th class="text-center">Time</th>
+                <th class="text-right"></th>
+                <th class="text-center">Results</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="result in results | filter:timeRecorded | orderBy:'time' | limitTo:1">
+                <td class="text-center">{{ result.number }}</td>
+                <td>{{ result.date | date:'MMM d' }}</td>
+                <td class="text-center">
+                  <span>{{ result.time }} min</span>
+                </td>
+                <td class="text-right winner">{{ result.winner }}</td>
+                <td class="text-center" ng-class="{foul: isFoul(match)}">
+                  <span>{{ result.winnerBalls }} : {{ result.loserBalls }}</span>
+                </td>
+                <td>{{ result.loser }}</td>
               </tr>
             </tbody>
           </table>
@@ -953,8 +996,28 @@
 
     app.controller('LeaderboardsController', function($scope, results, players) {
       $scope.results = results;
+      $scope.totalPockets = calcTotalPockets();
+      $scope.totalTime = calcTotalTime();
       $scope.playerStats = calcPlayerStats();
-      $scope.timeRecorded = function(result) { return result.time; };
+      $scope.timeRecorded = function(result) { return !!result.time; };
+
+      function calcTotalPockets() {
+        var totalPockets = 0;
+        _.each(results, function(result) {
+          var pockets = result.winnerBalls + result.loserBalls;
+          totalPockets = totalPockets + pockets;
+        });
+        return totalPockets;
+      }
+
+      function calcTotalTime() {
+        var totalTime = 0;
+        _.each(results, function(result) {
+          var time = result.time || 10;
+          totalTime = totalTime + time;
+        });
+        return totalTime;
+      }
 
       function calcPlayerStats() {
         var playerStats = [];
@@ -970,6 +1033,7 @@
         });
         return playerStats;
       }
+
       function countPockets(matches, player) {
         return _.reduce(matches, function(counts, match){
           if (match.winner === player) {
@@ -981,11 +1045,13 @@
           }
         }, 0);
       }
+
       function countWins(matches, player) {
         return _.filter(matches, function(match) {
           return match.winner == player;
         }).length;
       }
+
       function countFoulWins(matches, player) {
         return _.filter(matches, function(match) {
           return match.winner == player && match.foul;
